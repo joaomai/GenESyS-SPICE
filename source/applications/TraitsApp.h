@@ -14,101 +14,10 @@
 #ifndef TRAITSAPP_H
 #define TRAITSAPP_H
 #include "BaseGenesysTerminalApplication.h"
-#include "terminal/examples/teaching/BufferFIFO.h"
 
-#include "terminal/examples/smarts/Smart_Parser.h"
-
-
-// TERMINAL USER INTERFACES
-#include "terminal/GenesysShell/GenesysShell.h"
-//
-// EXAMPLES
-//
-// book
-#include "terminal/examples/book/Book_Cap02_Example01.h"
-// smarts
-#include "terminal/examples/smarts/Smart_AssignWriteSeizes.h"
-#include "terminal/examples/smarts/Smart_BatchSeparate.h"
-#include "terminal/examples/smarts/Smart_Clone.h"
-#include "terminal/examples/smarts/Smart_CppForG.h"
-#include "terminal/examples/smarts/Smart_Delay.h"
-#include "terminal/examples/smarts/Smart_Dummy.h"
-#include "terminal/examples/smarts/Smart_Failures.h"
-#include "terminal/examples/smarts/Smart_FiniteStateMachine.h"
-#include "terminal/examples/smarts/Smart_HoldSearchRemove.h"
-#include "terminal/examples/smarts/Smart_ModelInfoModelSimulation.h"
-#include "terminal/examples/smarts/Smart_ODE.h"
-#include "terminal/examples/smarts/Smart_OnEvent.h"
-#include "terminal/examples/smarts/Smart_Parser.h"
-#include "terminal/examples/smarts/Smart_ParserModelFunctions.h"
-#include "terminal/examples/smarts/Smart_Plugin.h"
-#include "terminal/examples/smarts/Smart_Process.h"
-#include "terminal/examples/smarts/Smart_ProcessSet.h"
-#include "terminal/examples/smarts/Smart_RouteStation.h"
-#include "terminal/examples/smarts/Smart_SeizeDelayRelease.h"
-#include "terminal/examples/smarts/Smart_SeizeDelayReleaseMany.h"
-#include "terminal/examples/smarts/Smart_SeizeDelayReleaseNoDataDefs.h"
-#include "terminal/examples/smarts/Smart_Sequence.h"
-#include "terminal/examples/smarts/Smart_SimulationControlResponse.h"
-#include "terminal/examples/smarts/Smart_WaitScanCondition.h"
-#include "terminal/examples/smarts/Smart_WaitSignal.h"
-
-// Arena Smarts from UFSC/CTC/INE/INE5425 students 2022-2
-#include "terminal/examples/arenaSmarts/Smart_AddingResource.h"
-#include "terminal/examples/arenaSmarts/Smart_AlternatingEntityCreation.h"
-#include "terminal/examples/arenaSmarts/Smart_ArrivalsElementStopsEntitiesArrivingAfterASetTime.h"
-#include "terminal/examples/arenaSmarts/Smart_ArrivalsEntityTypeVsAttribute.h"
-#include "terminal/examples/arenaSmarts/Smart_AssignExample.h"
-#include "terminal/examples/arenaSmarts/Smart_AutomaticStatisticsCollection.h"
-#include "terminal/examples/arenaSmarts/Smart_BasicModeling.h"
-#include "terminal/examples/arenaSmarts/Smart_BatchAndSeparate.h"
-#include "terminal/examples/arenaSmarts/Smart_ContinuousFlowEntities.h"
-#include "terminal/examples/arenaSmarts/Smart_Create.h"
-#include "terminal/examples/arenaSmarts/Smart_DecideNWayByChance.h"
-#include "terminal/examples/arenaSmarts/Smart_DefiningAttributesAsStrings.h"
-#include "terminal/examples/arenaSmarts/Smart_DefiningControlLogic.h"
-#include "terminal/examples/arenaSmarts/Smart_DefiningResourceCapacity.h"
-#include "terminal/examples/arenaSmarts/Smart_DelayBasedOnReplication.h"
-#include "terminal/examples/arenaSmarts/Smart_EntitiesProcessedByPriority.h"
-#include "terminal/examples/arenaSmarts/Smart_EvaluatingConditionsBeforeEnteringQueue.h"
-#include "terminal/examples/arenaSmarts/Smart_Expression.h"
-#include "terminal/examples/arenaSmarts/Smart_InventoryAndHoldingCosts.h"
-#include "terminal/examples/arenaSmarts/Smart_MaxArrivalsField.h"
-#include "terminal/examples/arenaSmarts/Smart_ModelRunUntil1000Parts.h"
-#include "terminal/examples/arenaSmarts/Smart_ModuleDisplayVariables.h"
-#include "terminal/examples/arenaSmarts/Smart_OverlappingResources.h"
-#include "terminal/examples/arenaSmarts/Smart_ParallelProcessingOfEntities.h"
-#include "terminal/examples/arenaSmarts/Smart_PlacingEntitiesInQueueSets.h"
-#include "terminal/examples/arenaSmarts/Smart_PriorityExample.h"
-#include "terminal/examples/arenaSmarts/Smart_ProcessArena.h"
-#include "terminal/examples/arenaSmarts/Smart_Record.h"
-#include "terminal/examples/arenaSmarts/Smart_RemovingAndReorderingEntitiesInAQueue.h"
-#include "terminal/examples/arenaSmarts/Smart_ResourceCosting.h"
-#include "terminal/examples/arenaSmarts/Smart_ResourceScheduleCosting.h"
-#include "terminal/examples/arenaSmarts/Smart_ResourceSets.h"
-#include "terminal/examples/arenaSmarts/Smart_SeizingMultipleSimultaneosly.h"
-#include "terminal/examples/arenaSmarts/Smart_SelectingRouteBasedOnProbability.h"
-#include "terminal/examples/arenaSmarts/Smart_SelectingShorterQueue.h"
-#include "terminal/examples/arenaSmarts/Smart_SynchronizingParallelEntities.h"
-#include "terminal/examples/arenaSmarts/Smart_ValueAdded.h"
-#include "terminal/examples/arenaSmarts/Smart_WaitForSignal.h"
-
-// arena examples
-#include "terminal/examples/arenaExamples/AirportSecurityExample.h"
-#include "terminal/examples/arenaExamples/AirportSecurityExampleExtended.h"
-#include "terminal/examples/arenaExamples/Airport_Extended1.h"
-#include "terminal/examples/arenaExamples/Assembly_Line.h"
-#include "terminal/examples/arenaExamples/Banking_Transactions.h"
-#include "terminal/examples/arenaExamples/Example_BasicOrderShipping.h"
-#include "terminal/examples/arenaExamples/Example_PortModel.h"
-#include "terminal/examples/arenaExamples/Example_PublicTransport.h"
-
-// teachng
-#include "terminal/examples/teaching/AnElectronicAssemblyAndTestSystem.h"
-#include "terminal/examples/teaching/OperatingSystem02.h"
-
-// under development
-#include "terminal/underDevelopment/TestingTerminalApp.h"
+// application to compile
+// #include "terminal/examples/spice/Half_Adder.h"
+#include "terminal/examples/spice/Rectifier.h"
 
 
 template <typename T>
@@ -122,6 +31,10 @@ template <> struct TraitsApp<GenesysApplication_if> {
 	//static const bool runTests = false;
 	static const TraceManager::Level traceLevel = TraceManager::Level::L9_mostDetailed;
 	static const bool runGraphicalUserInterface = false;
+
+	//// SPICES
+	// typedef Half_Adder Application;
+	typedef Rectifier Application;
 
 	//// SMART SMARTs ALPHA SORTED
 	//typedef Smart_AssignWriteSeizes Application;
@@ -142,7 +55,7 @@ template <> struct TraitsApp<GenesysApplication_if> {
 	//typedef Smart_Process Application;
 	//typedef Smart_ProcessSet Application;
 	//typedef Smart_RouteStation Application;
-	typedef Smart_SeizeDelayRelease Application;
+	// typedef Smart_SeizeDelayRelease Application;
 	//typedef Smart_SeizeDelayReleaseNoDataDefs Application;
 	//typedef Smart_SeizeDelayReleaseMany Application;
 	//typedef Smart_Sequence Application;

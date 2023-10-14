@@ -4,7 +4,7 @@ QT += designer
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++14
 
-QMAKE_CXXFLAGS += -pedantic -Wno-unused -Wmissing-field-initializers
+QMAKE_CXXFLAGS += -w -pedantic -Wno-unused -Wmissing-field-initializers
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -81,6 +81,8 @@ SOURCES += \
 	../../../../plugins/components/Exit.cpp \
 	../../../../plugins/components/FiniteStateMachine.cpp \
 	../../../../plugins/components/PickableStationItem.cpp \
+	../../../../plugins/components/SPICECircuit.cpp \
+	../../../../plugins/components/SPICENode.cpp \
 	../../../../plugins/components/Wait.cpp \
 	../../../../plugins/components/LSODE.cpp \
 	../../../../plugins/components/Leave.cpp \
@@ -117,6 +119,7 @@ SOURCES += \
 	../../../../plugins/data/Label.cpp \
 	../../../../plugins/data/Queue.cpp \
 	../../../../plugins/data/Resource.cpp \
+	../../../../plugins/data/SPICERunner.cpp \
 	../../../../plugins/data/Schedule.cpp \
 	../../../../plugins/data/Sequence.cpp \
 	../../../../plugins/data/Set.cpp \
@@ -198,6 +201,8 @@ SOURCES += \
 	../../../terminal/examples/smarts/Smart_SeizeDelayRelease.cpp \
 	../../../terminal/examples/smarts/Smart_SeizeDelayReleaseMany.cpp \
 	../../../terminal/examples/smarts/Smart_Sequence.cpp \
+	../../../terminal/examples/spice/Half_Adder.cpp \
+	../../../terminal/examples/spice/Rectifier.cpp \
 	../../../terminal/examples/teaching/AnElectronicAssemblyAndTestSystem.cpp \
 	../../../terminal/examples/teaching/FullSimulationOfComplexModel.cpp \
 	../../../terminal/examples/teaching/OperatingSystem02.cpp \
@@ -324,6 +329,8 @@ HEADERS += \
 	../../../../plugins/components/Exit.h \
 	../../../../plugins/components/FiniteStateMachine.h \
 	../../../../plugins/components/PickableStationItem.h \
+	../../../../plugins/components/SPICECircuit.h \
+	../../../../plugins/components/SPICENode.h \
 	../../../../plugins/components/Wait.h \
 	../../../../plugins/components/LSODE.h \
 	../../../../plugins/components/Leave.h \
@@ -360,6 +367,7 @@ HEADERS += \
 	../../../../plugins/data/Label.h \
 	../../../../plugins/data/Queue.h \
 	../../../../plugins/data/Resource.h \
+	../../../../plugins/data/SPICERunner.h \
 	../../../../plugins/data/Schedule.h \
 	../../../../plugins/data/Sequence.h \
 	../../../../plugins/data/Set.h \
@@ -447,6 +455,8 @@ HEADERS += \
 	../../../terminal/examples/smarts/Smart_SeizeDelayRelease.h \
 	../../../terminal/examples/smarts/Smart_SeizeDelayReleaseMany.h \
 	../../../terminal/examples/smarts/Smart_Sequence.h \
+	../../../terminal/examples/spice/Half_Adder.h \
+	../../../terminal/examples/spice/Rectifier.h \
 	../../../terminal/examples/teaching/AnElectronicAssemblyAndTestSystem.h \
 	../../../terminal/examples/teaching/BufferFIFO.h \
 	../../../terminal/examples/teaching/FullSimulationOfComplexModel.h \

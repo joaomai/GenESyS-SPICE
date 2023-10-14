@@ -1,0 +1,17 @@
+GenESyS generated circuit
+
+.include ./diode.cir
+
+Vs0 net_1 gnd sin(0 12.000000 60.000000 ) 
+D0 net_2 net_1 diode 
+D1 net_2 gnd diode 
+D2 net_1 net_3 diode 
+D3 gnd net_2 diode 
+C0 net_3 net_2 9.999999m  
+R0 net_3 net_2 1.000000K  
+
+.control
+tran 1.000000m  1.000000 
+hardcopy plot.ps v(net_3)-v(net_2)
+.endc
+.end
