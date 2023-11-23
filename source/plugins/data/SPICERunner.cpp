@@ -53,10 +53,71 @@ void SPICERunner::SendComponent(std::string *instance, std::string subcircuit, s
     if (model.size()) models.insert(model);
 }
 
+void SPICERunner::PlotV(std::string net) {
+    vplots.push_back(net);
+}
+
+template<typename... Args>
+void SPICERunner::PlotV(std::string net, Args... args) {
+    vplots.push_back(net);
+    PlotV(args...);
+}
+
+void SPICERunner::PlotVRelative(std::string comparison_base, std::string net) {
+    vplots.push_back(net + "-" + comparison_base);
+}
+
+template<typename... Args>
+void SPICERunner::PlotVRelative(std::string comparison_base, std::string net, Args... args) {
+    vplots.push_back(net + "-" + comparison_base);
+    PlotVPlotVRelative(comparison_base, args...);
+}
+
+void SPICERunner::PlotI(std::string net) {
+    iplots.push_back(net);
+}
+
+template<typename... Args>
+void SPICERunner::PlotI(std::string net, Args... args) {
+    iplots.push_back(net);
+    PlotV(args...);
+}
+
+void SPICERunner::PlotIRelative(std::string comparison_base, std::string net) {
+    vplots.push_back(net + "-" + comparison_base);
+}
+
+template<typename... Args>
+void SPICERunner::PlotIRelative(std::string comparison_base, std::string net, Args... args) {
+    vplots.push_back(net + "-" + comparison_base);
+    PlotVPlotIRelative(comparison_base, args...);
+}
+
+void SPICERunner::MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish) {
+    measures.push_back("meas tran "+label+" "+peak+" "+quantity+"("+node+") from="+uc(start)+" to="+uc(finish)+"\n");
+}
+
+void SPICERunner::MeasureTrigTarg(std::string label, std::string trig, float trig_value, std::string trig_inclin, std::string targ, float targ_value, std::string targ_inclin) {
+    measures.push_back("meas tran "+label+" TRIG v("+trig+") val='"+uc(trig_value)+"' "+trig_inclin+"=1 TARG v("+targ+") val='"+uc(targ_value)+"' "+targ_inclin+"=1\n");
+}
+
 void SPICERunner::ConfigSim(double duration, double step, std::string plot) {
-    config = "\n.control\n";
+    config = "\n.control\noption post = 2\n";
+    // Simulation Duration
     config += "tran " + uc(step) + " " + uc(duration) + "\n";
-    if (plot.size()) config+= "hardcopy plot.ps " + plot;
+
+    // Measures
+    for (std::string measure: measures) config += measure;
+    
+    // Plots
+    std::vector<std::pair<std::vector<std::string>,std::string>> plots = {{iplots, "i"}, {vplots, "v"}};
+    for (int i = 0; i < plots.size(); ++i){
+        auto [plot_type, radical] = plots[i];
+        std::string plot_string = "hardcopy plot"+std::to_string(i)+".ps ";
+        for (std::string iplot: plot_type) plot_string += radical+"("+iplot+") ";
+        plot_string += "\n";
+        if (plot_type.size()) config += plot_string;
+    }
     config+= "\n.endc\n";
 }
 

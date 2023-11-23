@@ -35,6 +35,7 @@ public: /// static public methods that must have implementations (Load and New j
 	static PluginInformation* GetPluginInformation();
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
+	operator std::string() const;
 
 protected: /// virtual protected method that must be overriden
 	virtual bool _loadInstance(PersistenceRecord *fields);

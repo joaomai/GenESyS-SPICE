@@ -39,6 +39,9 @@ SPICENode::SPICENode(Model* model, std::string name) : ModelComponent(model, Uti
     }
 }
 
+SPICENode::operator std::string() const {
+    return node_name;
+}
 
 //
 // public: /// new public user methods for this component

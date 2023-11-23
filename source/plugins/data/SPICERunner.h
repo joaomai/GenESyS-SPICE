@@ -44,6 +44,16 @@ public: /// new public user methods for this component
     void SendComponent(std::string *instance, std::string subcircuit = "", std::string model = "");
     void ConfigSim(double duration, double step, std::string plot = "");
     void Run(std::string output);
+	void PlotV(std::string net);
+	template<typename... Args> void PlotV(std::string net, Args... args);
+	void PlotVRelative(std::string comparison_base, std::string net);
+	template<typename... Args> void PlotVRelative(std::string comparison_base, std::string net, Args... args);
+	void PlotI(std::string net);
+	template<typename... Args> void PlotI(std::string net, Args... args);
+	void PlotIRelative(std::string comparison_base, std::string net);
+	template<typename... Args> void PlotIRelative(std::string comparison_base, std::string net, Args... args);
+	void MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish);
+	void MeasureTrigTarg(std::string label, std::string trig, float trig_value, std::string trig_inclin, std::string targ, float targ_value, std::string targ_inclin);
 
 public: /// virtual public methods
 	virtual std::string show();
@@ -83,6 +93,13 @@ private: /// Attributes that should be loaded or saved with this component (Pers
 	std::set<std::string> subcircuits;
 	std::set<std::string> models;
 	std::vector<std::string*> instances;
+
+	// Plot
+	std::vector<std::string> vplots;
+	std::vector<std::string> iplots;
+
+	// Measure
+	std::vector<std::string> measures;
 
     std::string models_path = DEFAULT.somePath;
     std::string config;
