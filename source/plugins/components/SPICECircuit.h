@@ -28,7 +28,8 @@ public: /// constructors
 public: /// new public user methods for this components
 	void init(SPICERunner* the_compiler, std::string description, unsigned int id, std::vector<std::string> the_params = {""}, std::string the_model = "", std::string the_model_file = "");
     void insertAtRank(int pin, SPICENode* node);
-	SPICERunner* getCompiler();
+	void setRunner(SPICERunner* runner);
+	SPICERunner* getRunner();
 
 public: /// virtual public methods
 	virtual std::string show();
@@ -104,7 +105,7 @@ class Resistor : public SPICECircuit {
 		id = counter++;
 		SPICECircuit::init(runner, "R a b", id, {uc(resistance)});
 	}
-	static PluginInformation* GetPluginInformation();
+	static PluginInformation* GetPluginInformation();	
     private:
     static unsigned int counter;
 };

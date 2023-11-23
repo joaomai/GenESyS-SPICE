@@ -66,8 +66,7 @@ SPICECircuit::SPICECircuit(Model* model, std::string name)
 // public: /// new public user methods for this component
 //
 
-void SPICECircuit::init(SPICERunner* the_compiler, std::string description, unsigned int id, std::vector<std::string> the_params, std::string the_model, std::string the_model_file) {
-	compiler = the_compiler;
+void SPICECircuit::init(std::string description, unsigned int id, std::vector<std::string> the_params, std::string the_model, std::string the_model_file) {
 	params = the_params;
 	model = the_model;
 	model_file = the_model_file;
@@ -124,7 +123,11 @@ void SPICECircuit::insertAtRank(int pin, SPICENode* node) {
     else for (std::string param: params) *spice_instance += param + " ";
 }
 
-SPICERunner* SPICECircuit::getCompiler() {
+void SPICECircuit::setRunner(SPICERunner* runner) {
+	compiler = runner;
+}
+
+SPICERunner* SPICECircuit::getRunner() {
     return compiler;
 }
 

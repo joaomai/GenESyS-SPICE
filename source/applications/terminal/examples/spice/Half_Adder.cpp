@@ -48,37 +48,37 @@ int Half_Adder::main(int argc, char** argv) {
 
 	Vsource* v1 = plugins->newInstance<Vsource>(model);
 	v1->init(runner, voltage);
-    v1->insertAtRank(0, vdd);
-    v1->insertAtRank(1, gnd);
+	v1->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
+	v1->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	Vpulse* va = plugins->newInstance<Vpulse>(model);
 	va->init(runner, voltage, sim_time);
-    va->insertAtRank(0, a);
-    va->insertAtRank(1, gnd);
+	va->getConnections()->insertAtPort(0, new Connection({a, 0}));
+	va->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	Vpulse* vb = plugins->newInstance<Vpulse>(model);
 	vb->init(runner, voltage, sim_time/2);
-    vb->insertAtRank(0, b);
-    vb->insertAtRank(1, gnd);
+	vb->getConnections()->insertAtPort(0, new Connection({b, 0}));
+	vb->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	XNOR* xnor = plugins->newInstance<XNOR>(model);
 	xnor->init(runner);
-    xnor->insertAtRank(0, vdd);
-    xnor->insertAtRank(1, gnd);
-    xnor->insertAtRank(2, a);
-    xnor->insertAtRank(3, b);
-    xnor->insertAtRank(4, sum);
+	xnor->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
+	xnor->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
+	xnor->getConnections()->insertAtPort(2, new Connection({a, 0}));
+	xnor->getConnections()->insertAtPort(3, new Connection({b, 0}));
+	xnor->getConnections()->insertAtPort(4, new Connection({sum, 0}));
 
 	NAND* nand = plugins->newInstance<NAND>(model);
 	nand->init(runner);
-    nand->insertAtRank(0, vdd);
-    nand->insertAtRank(1, gnd);
-    nand->insertAtRank(2, a);
-    nand->insertAtRank(3, b);
-    nand->insertAtRank(4, carry);
+	nand->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
+	nand->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
+	nand->getConnections()->insertAtPort(2, new Connection({a,0}));
+	nand->getConnections()->insertAtPort(3, new Connection({b, 0}));
+	nand->getConnections()->insertAtPort(4, new Connection({carry, 0}));
 
-	runner->ConfigSim(sim_time, sim_step, "v("+sum->getNodeName()+")");
-	runner->Run(runner->CompileSpiceFile());
+	// runner->ConfigSim(sim_time, sim_step, "v("+sum->getNodeName()+")");
+	// runner->Run(runner->CompileSpiceFile());
 
 	delete genesys;
 

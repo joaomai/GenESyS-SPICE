@@ -46,42 +46,42 @@ int Rectifier::main(int argc, char** argv) {
 
 	Vsine* vpu1 = plugins->newInstance<Vsine>(model);
 	vpu1->init(runner, 12, 60);
-	vpu1->insertAtRank(0, vdd);
-	vpu1->insertAtRank(1, gnd);
+	vpu1->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
+	vpu1->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	Diode* d1 = plugins->newInstance<Diode>(model);
 	d1->init(runner);
-	d1->insertAtRank(0, vm);
-	d1->insertAtRank(1, vdd);
+	d1->getConnections()->insertAtPort(0, new Connection({vm, 0}));
+	d1->getConnections()->insertAtPort(1, new Connection({vdd, 0}));
 
 	Diode* d2 = plugins->newInstance<Diode>(model);
 	d2->init(runner);
-	d2->insertAtRank(0, vm);
-	d2->insertAtRank(1, gnd);
+	d2->getConnections()->insertAtPort(0, new Connection({vm, 0}));
+	d2->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	Diode* d3 = plugins->newInstance<Diode>(model);
 	d3->init(runner);
-	d3->insertAtRank(0, vdd);
-	d3->insertAtRank(1, vp);
+	d3->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
+	d3->getConnections()->insertAtPort(1, new Connection({vp, 0}));
 
 	Diode* d4 = plugins->newInstance<Diode>(model);
 	d4->init(runner);
-	d4->insertAtRank(0, gnd);
-	d4->insertAtRank(1, vm);
+	d4->getConnections()->insertAtPort(0, new Connection({gnd, 0}));
+	d4->getConnections()->insertAtPort(1, new Connection({vm, 0}));
 
 	Capacitor* c1 = plugins->newInstance<Capacitor>(model);
 	c1->init(runner, 0.01);
-	c1->insertAtRank(0, vp);
-	c1->insertAtRank(1, vm);
+	c1->getConnections()->insertAtPort(0, new Connection({vp, 0}));
+	c1->getConnections()->insertAtPort(1, new Connection({vm, 0}));
 
 	Resistor* r1 = plugins->newInstance<Resistor>(model);
 	r1->init(runner, 1000);
-	r1->insertAtRank(0, vp);
-	r1->insertAtRank(1, vm);
+	r1->getConnections()->insertAtPort(0, new Connection({vp, 0}));
+	r1->getConnections()->insertAtPort(1, new Connection({vm, 0}));
 
-	runner->ConfigSim(sim_time, sim_step,
-					  "v("+vp->getNodeName()+")-v("+vm->getNodeName()+")");
-	runner->Run(runner->CompileSpiceFile());
+	// runner->ConfigSim(sim_time, sim_step,
+	//				  "v("+vp->getNodeName()+")-v("+vm->getNodeName()+")");
+	// runner->Run(runner->CompileSpiceFile());
 
 	delete genesys;
 
