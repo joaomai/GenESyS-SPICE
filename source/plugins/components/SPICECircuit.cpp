@@ -110,6 +110,21 @@ void SPICECircuit::init(std::string description, unsigned int id, std::vector<st
 	}
 }
 
+void SPICECircuit::UpdateConnections() {
+	for (auto [pin, node] : *getConnections()->connections()) {
+		pins[pin] = node->getNodeName();
+        
+		if (!plain_circuit) *spice_instance = "x"+spice_name+std::to_string(id)+" ";
+		else *spice_instance = spice_name+std::to_string(id)+" ";
+		
+		for (std::string pin : pins) *spice_instance += pin+" ";
+		if (plain_circuit && model.size()) *spice_instance += model + " ";
+		
+		if (!plain_circuit) *spice_instance += spice_name;
+		else for (std::string param: params) *spice_instance += param + " ";
+	}
+}
+
 void SPICECircuit::insertAtRank(int pin, SPICENode* node) {
     pins[pin] = node->getNodeName();
         

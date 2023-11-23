@@ -26,7 +26,6 @@ public: /// constructors
 	virtual ~SPICECircuit() = default;
 
 public: /// new public user methods for this components
-	void init(SPICERunner* the_compiler, std::string description, unsigned int id, std::vector<std::string> the_params = {""}, std::string the_model = "", std::string the_model_file = "");
     void insertAtRank(int pin, SPICENode* node);
 	void setRunner(SPICERunner* runner);
 	SPICERunner* getRunner();
@@ -40,6 +39,8 @@ public: /// static public methods that must have implementations (Load and New j
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
 protected: /// virtual protected method that must be overriden
+	void init(std::string description, unsigned int id, std::vector<std::string> the_params = {""}, std::string the_model = "", std::string the_model_file = "");
+	void UpdateConnections();
 	virtual bool _loadInstance(PersistenceRecord *fields);
 	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
 	virtual void _onDispatchEvent(Entity* entity, unsigned int inputPortNumber); ///< This method is only for ModelComponents, not ModelDataElements
@@ -101,13 +102,14 @@ class Resistor : public SPICECircuit {
 	Resistor(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, float resistance) {
+	void init(float resistance) {
 		id = counter++;
 		SPICECircuit::init(runner, "R a b", id, {uc(resistance)});
 	}
-	static PluginInformation* GetPluginInformation();	
+	static PluginInformation* GetPluginInformation();
     private:
     static unsigned int counter;
+	float resistance;
 };
 
 class Vsource : public SPICECircuit {
@@ -115,7 +117,7 @@ class Vsource : public SPICECircuit {
 	Vsource(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, double vcc) {
+	void init(double vcc) {
 		id = counter++;
 		std::string s = uc(vcc);
 		SPICECircuit::init(runner, "Vd a b", id, {s});
@@ -131,7 +133,7 @@ class Vpulse : public SPICECircuit {
 
 	}
 
-	void init(SPICERunner* runner, double vcc, double freq, double slope = 1e-11) {
+	void init(double vcc, double freq, double slope = 1e-11) {
 		id = counter++;
 		SPICECircuit::init(runner, "Vp a b", id, {"PULSE (0 "+uc(vcc)+uc(freq/2)+uc(slope)+uc(slope)+uc(freq/2)+uc(freq)+")"});
 	}
@@ -146,7 +148,7 @@ class Vsine : public SPICECircuit {
 	Vsine(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, double vcc, double freq) {
+	void init(double vcc, double freq) {
 		id = counter++;
 		SPICECircuit::init(runner, "Vs a b", id, {"sin(0 "+uc(vcc)+uc(freq)+")"});
 	}
@@ -161,7 +163,7 @@ class Capacitor : public SPICECircuit {
 	Capacitor(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, float capacitance) {
+	void init(float capacitance) {
 		id = counter++;
 		SPICECircuit::init(runner, "C a b", id, {uc(capacitance)});
 	}
@@ -176,7 +178,7 @@ class Diode : public SPICECircuit {
 	Diode(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, std::string model = "diode") {
+	void init(std::string model = "diode") {
 		id = counter++;
 		SPICECircuit::init(runner, "D a b", id, {}, model, model);
 	}
@@ -191,7 +193,7 @@ class PMOS: public SPICECircuit {
 	PMOS(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, double width = 140e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
+	void init(double width = 140e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
 		id = counter++;
 		SPICECircuit::init(runner, "Mp source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "pmos"+model, model);
 	}
@@ -206,7 +208,7 @@ class NMOS: public SPICECircuit {
 	NMOS(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, double width = 70e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
+	void init(double width = 70e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
 		id = counter++;
 		SPICECircuit::init(runner, "Mn source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "nmos"+model, model);
 	}
@@ -221,7 +223,7 @@ class NOT : public SPICECircuit {
 	NOT(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
+	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
 		SPICECircuit::init(runner,
 			".subckt NOT vp a s\n"
@@ -241,7 +243,7 @@ class NAND : public SPICECircuit {
 	NAND(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
+	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
 		SPICECircuit::init(runner,
 			".subckt NAND vp vm a b s\n"
@@ -263,7 +265,7 @@ class AND : public SPICECircuit {
 	AND(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
+	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
 		SPICECircuit::init(runner,
 			 ".subckt AND vp vm a b s\n"
@@ -287,7 +289,7 @@ class NOR : public SPICECircuit {
 	NOR(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
+	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
 		SPICECircuit::init(runner,
 			 ".subckt NOR vp vm a b s\n"
@@ -310,7 +312,7 @@ class OR : public SPICECircuit {
 
     }
 
-	void init(SPICERunner* runner, std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
+	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
 		SPICECircuit::init(runner,
 			 ".subckt OR vp vm a b s\n"
@@ -334,7 +336,7 @@ class XOR : public SPICECircuit {
 	XOR(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
+	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
 		SPICECircuit::init(runner,
 			 ".subckt XOR vp vm a b s\n"
@@ -366,7 +368,7 @@ class XNOR : public SPICECircuit {
 	XNOR(Model* model, std::string name = ""): SPICECircuit(model, name) {
 
     }
-	void init(SPICERunner* runner, std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
+	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
 		SPICECircuit::init(runner,
 			 ".subckt XNOR vp vm a b s\n"

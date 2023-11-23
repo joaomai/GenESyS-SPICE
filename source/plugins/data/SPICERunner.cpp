@@ -33,6 +33,8 @@ SPICERunner::SPICERunner(Model* model, std::string name) : ModelDataDefinition(m
 //
 
 std::string SPICERunner::CompileSpiceFile() {
+    for (auto callback : subscribers) callback();
+
     std::string spicefile = "GenESyS generated circuit\n\n";//set spicebehavior=all\n\n";
     // Resolves all model dependencies
 	for (std::string model: models) spicefile += ".include " + models_path + model + ".cir\n";
@@ -46,7 +48,8 @@ std::string SPICERunner::CompileSpiceFile() {
     return spicefile;
 }
 
-void SPICERunner::SendComponent(std::string *instance, std::string subcircuit, std::string model) {
+void SPICERunner::SendComponent(std::string *instance, std::string subcircuit, std::string model, std::function<void()> callback) {
+    subscribers.push_back(callback);
     // Recieves component data
     instances.push_back(instance);
     if (subcircuit.size()) subcircuits.insert(subcircuit);
@@ -121,7 +124,8 @@ void SPICERunner::ConfigSim(double duration, double step, std::string plot) {
     config+= "\n.endc\n";
 }
 
-void SPICERunner::Run(std::string output) {
+void SPICERunner::Run() {
+    std::string output = CompileSpiceFile();
     std::string s;
     std::ofstream out("input.cir");
     out << output;

@@ -20,6 +20,7 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <functional>
 
 #include "../../kernel/simulator/ModelDataDefinition.h"
 #include "../../kernel/simulator/PluginInformation.h"
@@ -90,8 +91,11 @@ private: /// Attributes that should be loaded or saved with this component (Pers
 	} DEFAULT;
 	std::string _someString = DEFAULT.someString;
 	unsigned int _someUint = DEFAULT.someUint;
+
 	std::set<std::string> subcircuits;
 	std::set<std::string> models;
+
+	std::vector<std::function<void()>> subscribers;
 	std::vector<std::string*> instances;
 
 	// Plot
