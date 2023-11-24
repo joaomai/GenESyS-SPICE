@@ -20,11 +20,52 @@ extern "C" StaticGetPluginInformation GetPluginInformation() {
 }
 #endif
 
+std::vector<std::string> split(std::string word, char split_char = ' '){
+    std::vector<std::string> tokenized_string;
+    std::string token = "";
+    for (char character: word){
+        if (character == split_char){
+            if (token.size()) tokenized_string.push_back(token);
+            token = "";
+            continue;
+        }
+        token += character;
+    }
+    if (token.size()) tokenized_string.push_back(token);
+    return tokenized_string;
+}
+
+std::string strip(const std::string& str) {
+    size_t start = str.find_first_not_of(" \t\n\r\f\v");
+    size_t end = str.find_last_not_of(" \t\n\r\f\v");
+
+    if (start == std::string::npos || end == std::string::npos) return "";
+
+    return str.substr(start, end - start + 1);
+}
+
+std::pair<std::string, double> ParseFromLine(std::string line){
+    std::vector<std::string> tokens = split(line, '=');
+    std::string label = strip(tokens[0]), value = strip(tokens[1].substr(0, tokens[1].size()-2));
+    return {label, std::stof(value)};
+}
+
+std::pair<std::string, double> ParseTrigLine(std::string line){
+    std::vector<std::string> tokens = split(line, '=');
+    std::string label = strip(tokens[0]), value = strip(tokens[1].substr(0, tokens[1].size()-2));
+    return {label, std::stof(value)};
+}
+
 //
 // public: /// constructors
 //
 
 SPICERunner::SPICERunner(Model* model, std::string name) : ModelDataDefinition(model, Util::TypeOf<SPICERunner>(), name) {
+}
+
+SPICERunner::~SPICERunner() {
+    // Deletes all promises
+    for (auto[promise, value]: promises) delete value;
 }
 
 
@@ -93,12 +134,43 @@ void SPICERunner::PlotIRelative(std::string comparison_base, std::string net, Ar
     PlotVPlotIRelative(comparison_base, args...);
 }
 
-void SPICERunner::MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish) {
+double* SPICERunner::MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish) {
+    double* promise = new double;
+    promises[label] = promise;
     measures.push_back("meas tran "+label+" "+peak+" "+quantity+"("+node+") from="+uc(start)+" to="+uc(finish)+"\n");
+    return promise;
 }
 
-void SPICERunner::MeasureTrigTarg(std::string label, std::string trig, float trig_value, std::string trig_inclin, std::string targ, float targ_value, std::string targ_inclin) {
+double* SPICERunner::MeasureTrigTarg(std::string label, std::string trig, float trig_value, std::string trig_inclin, std::string targ, float targ_value, std::string targ_inclin) {
+    double* promise = new double;
+    promises[label] = promise;
     measures.push_back("meas tran "+label+" TRIG v("+trig+") val='"+uc(trig_value)+"' "+trig_inclin+"=1 TARG v("+targ+") val='"+uc(targ_value)+"' "+targ_inclin+"=1\n");
+    return promise;
+}
+
+void SPICERunner::ParseOutput(){
+    std::ifstream data("output");
+    if (!data.is_open()) return;
+    std::string line;
+    while (getline(data, line)){
+        // Determines if the any promise is in the line
+        bool one_key = false;
+        for (auto [label, promise]: promises){
+            size_t found = line.find(label);
+            if (found != std::string::npos) {
+                one_key = true;
+                break;
+            }
+        }
+        size_t found = line.find("trig=");
+        if (found == std::string::npos) {
+            auto[label, value] = ParseTrigLine(line);
+            *promises[label] = value;    
+        } else {
+            auto[label, value] = ParseFromLine(line);
+            *promises[label] = value;
+        }
+    }
 }
 
 void SPICERunner::ConfigSim(double duration, double step, std::string plot) {
@@ -135,6 +207,8 @@ void SPICERunner::Run(std::string output) {
             std::cout << s << '\n';
         }
     }
+
+    ParseOutput();
 }
 
 

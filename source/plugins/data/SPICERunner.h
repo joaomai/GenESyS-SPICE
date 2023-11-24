@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
@@ -52,8 +53,9 @@ public: /// new public user methods for this component
 	template<typename... Args> void PlotI(std::string net, Args... args);
 	void PlotIRelative(std::string comparison_base, std::string net);
 	template<typename... Args> void PlotIRelative(std::string comparison_base, std::string net, Args... args);
-	void MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish);
-	void MeasureTrigTarg(std::string label, std::string trig, float trig_value, std::string trig_inclin, std::string targ, float targ_value, std::string targ_inclin);
+	double* MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish);
+	double* MeasureTrigTarg(std::string label, std::string trig, float trig_value, std::string trig_inclin, std::string targ, float targ_value, std::string targ_inclin);
+	void SPICERunner::ParseOutput();
 
 public: /// virtual public methods
 	virtual std::string show();
@@ -100,6 +102,7 @@ private: /// Attributes that should be loaded or saved with this component (Pers
 
 	// Measure
 	std::vector<std::string> measures;
+	std::map<std::string, double*> promises;
 
     std::string models_path = DEFAULT.somePath;
     std::string config;
