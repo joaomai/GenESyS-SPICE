@@ -20,19 +20,19 @@ extern "C" StaticGetPluginInformation GetPluginInformation() {
 }
 #endif
 
-std::vector<std::string> split(std::string word, char split_char = ' '){
-    std::vector<std::string> tokenized_string;
-    std::string token = "";
-    for (char character: word){
-        if (character == split_char){
-            if (token.size()) tokenized_string.push_back(token);
-            token = "";
-            continue;
-        }
-        token += character;
-    }
-    if (token.size()) tokenized_string.push_back(token);
-    return tokenized_string;
+std::vector<std::string> split1(std::string word, char split_char = ' '){
+	std::vector<std::string> tokenized_string;
+	std::string token = "";
+	for (char character: word){
+		if (character == split_char){
+			if (token.size()) tokenized_string.push_back(token);
+			token = "";
+			continue;
+		}
+		token += character;
+	}
+	if (token.size()) tokenized_string.push_back(token);
+	return tokenized_string;
 }
 
 std::string strip(const std::string& str) {
@@ -45,13 +45,13 @@ std::string strip(const std::string& str) {
 }
 
 std::pair<std::string, double> ParseFromLine(std::string line){
-    std::vector<std::string> tokens = split(line, '=');
+	std::vector<std::string> tokens = split1(line, '=');
     std::string label = strip(tokens[0]), value = strip(tokens[1].substr(0, tokens[1].size()-2));
     return {label, std::stof(value)};
 }
 
 std::pair<std::string, double> ParseTrigLine(std::string line){
-    std::vector<std::string> tokens = split(line, '=');
+	std::vector<std::string> tokens = split1(line, '=');
     std::string label = strip(tokens[0]), value = strip(tokens[1].substr(0, tokens[1].size()-2));
     return {label, std::stof(value)};
 }
@@ -154,24 +154,26 @@ double* SPICERunner::MeasureTrigTarg(std::string label, std::string trig, float 
     return promise;
 }
 
-void SPICERunner::ParseOutput(){
+void SPICERunner::ParseOutput() {
     std::ifstream data("output");
     if (!data.is_open()) return;
     std::string line;
-    while (getline(data, line)){
+	while (getline(data, line)) {
         // Determines if the any promise is in the line
         bool one_key = false;
-        for (auto [label, promise]: promises){
+		for (auto [label, promise]: promises) {
             size_t found = line.find(label);
             if (found != std::string::npos) {
                 one_key = true;
                 break;
             }
         }
+		if (!one_key) continue;
+
         size_t found = line.find("trig=");
         if (found == std::string::npos) {
             auto[label, value] = ParseTrigLine(line);
-            *promises[label] = value;    
+			*promises[label] = value;
         } else {
             auto[label, value] = ParseFromLine(line);
             *promises[label] = value;
@@ -206,7 +208,7 @@ void SPICERunner::Run() {
     out << output;
     out.close();
 
-	int code = std::system("ngspice < input.cir 2> /dev/null");
+	int code = std::system("ngspice < input.cir 1> output 2> /dev/null");
 
     if (code == 0) {
         std::ifstream in("output");

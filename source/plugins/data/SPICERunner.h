@@ -39,7 +39,7 @@ inline std::string uc(double value){
 class SPICERunner : public ModelDataDefinition {
 public: /// constructors
 	SPICERunner(Model* model, std::string name = "");
-	virtual ~SPICERunner() = default;
+	virtual ~SPICERunner();
 
 public: /// new public user methods for this component
 	std::string CompileSpiceFile();
@@ -57,7 +57,7 @@ public: /// new public user methods for this component
 	template<typename... Args> void PlotIRelative(std::string comparison_base, std::string net, Args... args);
 	double* MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish);
 	double* MeasureTrigTarg(std::string label, std::string trig, float trig_value, std::string trig_inclin, std::string targ, float targ_value, std::string targ_inclin);
-	void SPICERunner::ParseOutput();
+	void ParseOutput();
 
 public: /// virtual public methods
 	virtual std::string show();

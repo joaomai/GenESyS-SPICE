@@ -83,9 +83,15 @@ int Rectifier::main(int argc, char** argv) {
 	r1->getConnections()->insertAtPort(0, new Connection({vp, 0}));
 	r1->getConnections()->insertAtPort(1, new Connection({vm, 0}));
 
+	double* v = runner->MeasurePeak("maxout", "max", "v", vdd->getNodeName(), 0, 1);
+
 	runner->PlotVRelative(vm->getNodeName(), vp->getNodeName());
+	runner->PlotVRelative(vdd->getNodeName(), gnd->getNodeName());
 	runner->ConfigSim(sim_time, sim_step);
 	runner->Run();
+
+
+	std::cout << *v << std::endl;
 
 	model->save("rectifier.gen");
 

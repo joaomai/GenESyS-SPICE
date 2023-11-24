@@ -1,0 +1,21 @@
+
+No compatibility mode selected!
+
+
+Circuit: genesys generated circuit
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+net_1                                        0
+net_2                             -2.97219e-21
+net_3                             -2.97221e-21
+vs1#branch                        -5.44076e-33
+
+maxout              =  1.199993e+01 at=  1.874911e-01
+com_hardcopy: graph not defined
