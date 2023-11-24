@@ -87,6 +87,8 @@ int Rectifier::main(int argc, char** argv) {
 	runner->ConfigSim(sim_time, sim_step);
 	runner->Run();
 
+	model->save("rectifier.gen");
+
 	delete genesys;
 
 	return 0;

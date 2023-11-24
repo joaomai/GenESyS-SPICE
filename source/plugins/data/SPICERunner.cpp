@@ -48,8 +48,11 @@ std::string SPICERunner::CompileSpiceFile() {
     return spicefile;
 }
 
-void SPICERunner::SendComponent(std::string *instance, std::function<void()> callback, std::string subcircuit, std::string model) {
-    subscribers.push_back(callback);
+void SPICERunner::SendCallback(std::function<void ()> callback) {
+	subscribers.push_back(callback);
+}
+
+void SPICERunner::SendComponent(std::string *instance, std::string subcircuit, std::string model) {
     // Recieves component data
     instances.push_back(instance);
     if (subcircuit.size()) subcircuits.insert(subcircuit);

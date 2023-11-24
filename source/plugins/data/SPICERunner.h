@@ -42,7 +42,8 @@ public: /// constructors
 
 public: /// new public user methods for this component
 	std::string CompileSpiceFile();
-	void SendComponent(std::string *instance, std::function<void()> callback, std::string subcircuit = "", std::string model = "");
+	void SendComponent(std::string *instance, std::string subcircuit = "", std::string model = "");
+	void SendCallback(std::function<void()> callback);
 	void ConfigSim(double duration, double step);
 	void Run();
 	void PlotV(std::string net);
