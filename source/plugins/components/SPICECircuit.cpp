@@ -166,7 +166,7 @@ void Resistor::setResistance(float resistance) {
 
 void Resistor::Build() {
 	id = counter++;
-	SPICECircuit::BuildCircuit("R a b", id, {uc(resistance)})
+	SPICECircuit::BuildCircuit("R a b", id, {uc(resistance)});
 }
 
 PluginInformation* Vsource::GetPluginInformation() {
@@ -329,7 +329,6 @@ void NOT::setElectricalModel(std::string electricalModel) {
 }
 
 void NOT::Build() {
-	id = counter++;
 	SPICECircuit::BuildCircuit(
 		".subckt NOT vp a s\n"
 		"Mp1 vp a s vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
@@ -518,6 +517,7 @@ void XOR::setNMOSLength(float NMOSLength) {
 
 void XOR::setElectricalModel(std::string electricalModel) {
 	this->electricalModel = electricalModel;
+}
 
 void XOR::Build() {
 	id = counter++;
@@ -565,28 +565,29 @@ void XNOR::setNMOSLength(float NMOSLength) {
 
 void XNOR::setElectricalModel(std::string electricalModel) {
 	this->electricalModel = electricalModel;
+}
 
 void XNOR::Build() {
 	id = counter++;
 	SPICECircuit::BuildCircuit(
 			".subckt XNOR vp vm a b s\n"
 			"Mp1 vp a na vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
-			"Mn1 na a vm vm NMOS"+electricalModel+" w="+uc(NMOSwidth)+" l="+uc(NMOSLength)+"\n"
+			"Mn1 na a vm vm NMOS"+electricalModel+" w="+uc(NMOSWidth)+" l="+uc(NMOSLength)+"\n"
 
 			"Mp2 vp b nb vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
-			"Mn2 nb b vm vm NMOS"+electricalModel+" w="+uc(NMOSwidth)+" l="+uc(NMOSLength)+"\n"
+			"Mn2 nb b vm vm NMOS"+electricalModel+" w="+uc(NMOSWidth)+" l="+uc(NMOSLength)+"\n"
 
 			"Mp3 vp na i1 vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
 			"Mp4 i1 b ns vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
 			"Mp5 vp a i2 vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
 			"Mp6 i2 nb ns vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
-			"Mn3 ns nb i3 vm NMOS"+electricalModel+" w="+uc(NMOSwidth)+" l="+uc(NMOSLength)+"\n"
-			"Mn4 i3 na vm vm NMOS"+electricalModel+" w="+uc(NMOSwidth)+" l="+uc(NMOSLength)+"\n"
-			"Mn5 ns b i4 vm NMOS"+electricalModel+" w="+uc(NMOSwidth)+" l="+uc(NMOSLength)+"\n"
-			"Mn6 i4 a vm vm NMOS"+electricalModel+" w="+uc(NMOSwidth)+" l="+uc(NMOSLength)+"\n"
+			"Mn3 ns nb i3 vm NMOS"+electricalModel+" w="+uc(NMOSWidth)+" l="+uc(NMOSLength)+"\n"
+			"Mn4 i3 na vm vm NMOS"+electricalModel+" w="+uc(NMOSWidth)+" l="+uc(NMOSLength)+"\n"
+			"Mn5 ns b i4 vm NMOS"+electricalModel+" w="+uc(NMOSWidth)+" l="+uc(NMOSLength)+"\n"
+			"Mn6 i4 a vm vm NMOS"+electricalModel+" w="+uc(NMOSWidth)+" l="+uc(NMOSLength)+"\n"
 
 			"Mp7 vp ns s vp PMOS"+electricalModel+" w="+uc(PMOSWidth)+" l="+uc(PMOSLength)+"\n"
-			"Mn7 s ns vm vm NMOS"+electricalModel+" w="+uc(NMOSwidth)+" l="+uc(NMOSLength)+"\n"
+			"Mn7 s ns vm vm NMOS"+electricalModel+" w="+uc(NMOSWidth)+" l="+uc(NMOSLength)+"\n"
 
 			".ends\n",
 			id, {}, electricalModel, electricalModel);
