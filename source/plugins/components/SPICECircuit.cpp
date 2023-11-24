@@ -164,7 +164,7 @@ PluginInformation* Resistor::GetPluginInformation() {
 ModelComponent* Resistor::LoadInstance(Model* model, PersistenceRecord *fields) {
 	Resistor* newComponent = new Resistor(model);
 	try {
-		// newComponent->_loadInstance(fields);
+		newComponent->_loadInstance(fields);
 	} catch (const std::exception& e) {
 
 	}
@@ -173,6 +173,21 @@ ModelComponent* Resistor::LoadInstance(Model* model, PersistenceRecord *fields) 
 
 ModelDataDefinition* Resistor::NewInstance(Model* model, std::string name) {
 	return new Resistor(model, name);
+}
+
+bool Resistor::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->resistance = fields->loadField("resistance", DEFAULT.someResistance);
+	}
+	return res;
+}
+
+void Resistor::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("resistance", resistance, DEFAULT.someResistance);
 }
 
 
@@ -194,7 +209,7 @@ PluginInformation* Vsource::GetPluginInformation() {
 ModelComponent* Vsource::LoadInstance(Model* model, PersistenceRecord *fields) {
 	Vsource* newComponent = new Vsource(model);
 	try {
-		// newComponent->_loadInstance(fields);
+		newComponent->_loadInstance(fields);
 	} catch (const std::exception& e) {
 
 	}
@@ -203,6 +218,21 @@ ModelComponent* Vsource::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* Vsource::NewInstance(Model* model, std::string name) {
 	return new Vsource(model, name);
+}
+
+bool Vsource::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->voltage = fields->loadField("voltage", DEFAULT.someVoltage);
+	}
+	return res;
+}
+
+void Vsource::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("voltage", voltage, DEFAULT.someVoltage);
 }
 
 
@@ -224,7 +254,7 @@ PluginInformation* Vpulse::GetPluginInformation() {
 ModelComponent* Vpulse::LoadInstance(Model* model, PersistenceRecord *fields) {
 	Vpulse* newComponent = new Vpulse(model);
 	try {
-		// newComponent->_loadInstance(fields);
+		newComponent->_loadInstance(fields);
 	} catch (const std::exception& e) {
 
 	}
@@ -233,6 +263,25 @@ ModelComponent* Vpulse::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* Vpulse::NewInstance(Model* model, std::string name) {
 	return new Vpulse(model, name);
+}
+
+bool Vpulse::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->voltage = fields->loadField("voltage", DEFAULT.someVoltage);
+		this->freq = fields->loadField("freq", DEFAULT.someFreq);
+		this->slope = fields->loadField("slope", DEFAULT.someSlope);
+	}
+	return res;
+}
+
+void Vpulse::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("voltage", voltage, DEFAULT.someVoltage);
+	fields->saveField("freq", freq, DEFAULT.someFreq);
+	fields->saveField("slope", slope, DEFAULT.someSlope);
 }
 
 void Vpulse::setVoltage(float voltage) {
@@ -261,7 +310,7 @@ PluginInformation* Vsine::GetPluginInformation() {
 ModelComponent* Vsine::LoadInstance(Model* model, PersistenceRecord *fields) {
 	Vsine* newComponent = new Vsine(model);
 	try {
-		// newComponent->_loadInstance(fields);
+		newComponent->_loadInstance(fields);
 	} catch (const std::exception& e) {
 
 	}
@@ -272,6 +321,22 @@ ModelDataDefinition* Vsine::NewInstance(Model* model, std::string name) {
 	return new Vsine(model, name);
 }
 
+bool Vsine::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->voltage = fields->loadField("voltage", DEFAULT.someVoltage);
+		this->freq = fields->loadField("freq", DEFAULT.someFreq);
+	}
+	return res;
+}
+
+void Vsine::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("voltage", voltage, DEFAULT.someVoltage);
+	fields->saveField("freq", freq, DEFAULT.someFreq);
+}
 
 void Vsine::setVoltage(float voltage) {
 	this->voltage = voltage;
@@ -295,7 +360,7 @@ PluginInformation* Capacitor::GetPluginInformation() {
 ModelComponent* Capacitor::LoadInstance(Model* model, PersistenceRecord *fields) {
 	Capacitor* newComponent = new Capacitor(model);
 	try {
-		// newComponent->_loadInstance(fields);
+		newComponent->_loadInstance(fields);
 	} catch (const std::exception& e) {
 
 	}
@@ -304,6 +369,21 @@ ModelComponent* Capacitor::LoadInstance(Model* model, PersistenceRecord *fields)
 
 ModelDataDefinition* Capacitor::NewInstance(Model* model, std::string name) {
 	return new Capacitor(model, name);
+}
+
+bool Capacitor::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->capacitance = fields->loadField("capacitance", DEFAULT.someCapacitance);
+	}
+	return res;
+}
+
+void Capacitor::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("capacitance", capacitance, DEFAULT.someCapacitance);
 }
 
 void Capacitor::setCapacitance(float capacitance) {
@@ -335,6 +415,21 @@ ModelDataDefinition* Diode::NewInstance(Model* model, std::string name) {
 	return new Diode(model, name);
 }
 
+bool Diode::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void Diode::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
+}
+
 void Diode::setElectricalModel(std::string electricalModel) {
 	this->electricalModel = electricalModel;
 }
@@ -364,6 +459,25 @@ ModelDataDefinition* PMOS::NewInstance(Model* model, std::string name) {
 	return new PMOS(model, name);
 }
 
+bool PMOS::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->width = fields->loadField("width", DEFAULT.someWidth);
+		this->length = fields->loadField("length", DEFAULT.someLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void PMOS::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("width", width, DEFAULT.someWidth);
+	fields->saveField("length", length, DEFAULT.someLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
+}
+
 void PMOS::setWidth(float width) {
 	this->width = width;
 }
@@ -390,7 +504,7 @@ PluginInformation* NMOS::GetPluginInformation() {
 ModelComponent* NMOS::LoadInstance(Model* model, PersistenceRecord *fields) {
 	NMOS* newComponent = new NMOS(model);
 	try {
-		// newComponent->_loadInstance(fields);
+		newComponent->_loadInstance(fields);
 	} catch (const std::exception& e) {
 
 	}
@@ -399,6 +513,25 @@ ModelComponent* NMOS::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* NMOS::NewInstance(Model* model, std::string name) {
 	return new NMOS(model, name);
+}
+
+bool NMOS::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->width = fields->loadField("width", DEFAULT.someWidth);
+		this->length = fields->loadField("length", DEFAULT.someLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void NMOS::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("width", width, DEFAULT.someWidth);
+	fields->saveField("length", length, DEFAULT.someLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
 }
 
 void NMOS::setWidth(float width) {
@@ -436,6 +569,29 @@ ModelComponent* NOT::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* NOT::NewInstance(Model* model, std::string name) {
 	return new NOT(model, name);
+}
+
+bool NOT::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->PMOSWidth = fields->loadField("PMOSWidth", DEFAULT.somePMOSWidth);
+		this->PMOSLength = fields->loadField("PMOSLength", DEFAULT.somePMOSLength);
+		this->NMOSWidth = fields->loadField("NMOSWidth", DEFAULT.someNMOSWidth);
+		this->NMOSLength = fields->loadField("NMOSLength", DEFAULT.someNMOSLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void NOT::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("PMOSWidth", PMOSWidth, DEFAULT.somePMOSWidth);
+	fields->saveField("PMOSLength", PMOSLength, DEFAULT.somePMOSLength);
+	fields->saveField("NMOSWidth", NMOSWidth, DEFAULT.someNMOSWidth);
+	fields->saveField("NMOSLength", NMOSLength, DEFAULT.someNMOSLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
 }
 
 void NOT::setPMOSWidth(float PMOSWidth) {
@@ -476,7 +632,7 @@ PluginInformation* NAND::GetPluginInformation() {
 ModelComponent* NAND::LoadInstance(Model* model, PersistenceRecord *fields) {
 	NAND* newComponent = new NAND(model);
 	try {
-		// newComponent->_loadInstance(fields);
+		newComponent->_loadInstance(fields);
 	} catch (const std::exception& e) {
 
 	}
@@ -485,6 +641,29 @@ ModelComponent* NAND::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* NAND::NewInstance(Model* model, std::string name) {
 	return new NAND(model, name);
+}
+
+bool NAND::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->PMOSWidth = fields->loadField("PMOSWidth", DEFAULT.somePMOSWidth);
+		this->PMOSLength = fields->loadField("PMOSLength", DEFAULT.somePMOSLength);
+		this->NMOSWidth = fields->loadField("NMOSWidth", DEFAULT.someNMOSWidth);
+		this->NMOSLength = fields->loadField("NMOSLength", DEFAULT.someNMOSLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void NAND::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("PMOSWidth", PMOSWidth, DEFAULT.somePMOSWidth);
+	fields->saveField("PMOSLength", PMOSLength, DEFAULT.somePMOSLength);
+	fields->saveField("NMOSWidth", NMOSWidth, DEFAULT.someNMOSWidth);
+	fields->saveField("NMOSLength", NMOSLength, DEFAULT.someNMOSLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
 }
 
 void NAND::setPMOSWidth(float PMOSWidth) {
@@ -537,6 +716,29 @@ ModelComponent* AND::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* AND::NewInstance(Model* model, std::string name) {
 	return new AND(model, name);
+}
+
+bool AND::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->PMOSWidth = fields->loadField("PMOSWidth", DEFAULT.somePMOSWidth);
+		this->PMOSLength = fields->loadField("PMOSLength", DEFAULT.somePMOSLength);
+		this->NMOSWidth = fields->loadField("NMOSWidth", DEFAULT.someNMOSWidth);
+		this->NMOSLength = fields->loadField("NMOSLength", DEFAULT.someNMOSLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void AND::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("PMOSWidth", PMOSWidth, DEFAULT.somePMOSWidth);
+	fields->saveField("PMOSLength", PMOSLength, DEFAULT.somePMOSLength);
+	fields->saveField("NMOSWidth", NMOSWidth, DEFAULT.someNMOSWidth);
+	fields->saveField("NMOSLength", NMOSLength, DEFAULT.someNMOSLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
 }
 
 void AND::setPMOSWidth(float PMOSWidth) {
@@ -593,6 +795,29 @@ ModelDataDefinition* NOR::NewInstance(Model* model, std::string name) {
 	return new NOR(model, name);
 }
 
+bool NOR::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->PMOSWidth = fields->loadField("PMOSWidth", DEFAULT.somePMOSWidth);
+		this->PMOSLength = fields->loadField("PMOSLength", DEFAULT.somePMOSLength);
+		this->NMOSWidth = fields->loadField("NMOSWidth", DEFAULT.someNMOSWidth);
+		this->NMOSLength = fields->loadField("NMOSLength", DEFAULT.someNMOSLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void NOR::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("PMOSWidth", PMOSWidth, DEFAULT.somePMOSWidth);
+	fields->saveField("PMOSLength", PMOSLength, DEFAULT.somePMOSLength);
+	fields->saveField("NMOSWidth", NMOSWidth, DEFAULT.someNMOSWidth);
+	fields->saveField("NMOSLength", NMOSLength, DEFAULT.someNMOSLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
+}
+
 void NOR::setPMOSWidth(float PMOSWidth) {
 	this->PMOSWidth = PMOSWidth;
 }
@@ -643,6 +868,29 @@ ModelComponent* OR::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* OR::NewInstance(Model* model, std::string name) {
 	return new OR(model, name);
+}
+
+bool OR::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->PMOSWidth = fields->loadField("PMOSWidth", DEFAULT.somePMOSWidth);
+		this->PMOSLength = fields->loadField("PMOSLength", DEFAULT.somePMOSLength);
+		this->NMOSWidth = fields->loadField("NMOSWidth", DEFAULT.someNMOSWidth);
+		this->NMOSLength = fields->loadField("NMOSLength", DEFAULT.someNMOSLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void OR::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("PMOSWidth", PMOSWidth, DEFAULT.somePMOSWidth);
+	fields->saveField("PMOSLength", PMOSLength, DEFAULT.somePMOSLength);
+	fields->saveField("NMOSWidth", NMOSWidth, DEFAULT.someNMOSWidth);
+	fields->saveField("NMOSLength", NMOSLength, DEFAULT.someNMOSLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
 }
 
 void OR::setPMOSWidth(float PMOSWidth) {
@@ -697,6 +945,29 @@ ModelComponent* XOR::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* XOR::NewInstance(Model* model, std::string name) {
 	return new XOR(model, name);
+}
+
+bool XOR::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->PMOSWidth = fields->loadField("PMOSWidth", DEFAULT.somePMOSWidth);
+		this->PMOSLength = fields->loadField("PMOSLength", DEFAULT.somePMOSLength);
+		this->NMOSWidth = fields->loadField("NMOSWidth", DEFAULT.someNMOSWidth);
+		this->NMOSLength = fields->loadField("NMOSLength", DEFAULT.someNMOSLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void XOR::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("PMOSWidth", PMOSWidth, DEFAULT.somePMOSWidth);
+	fields->saveField("PMOSLength", PMOSLength, DEFAULT.somePMOSLength);
+	fields->saveField("NMOSWidth", NMOSWidth, DEFAULT.someNMOSWidth);
+	fields->saveField("NMOSLength", NMOSLength, DEFAULT.someNMOSLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
 }
 
 void XOR::setPMOSWidth(float PMOSWidth) {
@@ -759,6 +1030,29 @@ ModelComponent* XNOR::LoadInstance(Model* model, PersistenceRecord *fields) {
 
 ModelDataDefinition* XNOR::NewInstance(Model* model, std::string name) {
 	return new XNOR(model, name);
+}
+
+bool XNOR::_loadInstance(PersistenceRecord *fields) {
+	bool res = ModelComponent::_loadInstance(fields);
+	if (res) {
+		// @TODO: not implemented yet
+		this->PMOSWidth = fields->loadField("PMOSWidth", DEFAULT.somePMOSWidth);
+		this->PMOSLength = fields->loadField("PMOSLength", DEFAULT.somePMOSLength);
+		this->NMOSWidth = fields->loadField("NMOSWidth", DEFAULT.someNMOSWidth);
+		this->NMOSLength = fields->loadField("NMOSLength", DEFAULT.someNMOSLength);
+		this->electricalModel = fields->loadField("electricalModel", DEFAULT.someElectricalModel);
+	}
+	return res;
+}
+
+void XNOR::_saveInstance(PersistenceRecord *fields, bool saveDefaultValues) {
+	ModelComponent::_saveInstance(fields, saveDefaultValues);
+	// @TODO: not implemented yet
+	fields->saveField("PMOSWidth", PMOSWidth, DEFAULT.somePMOSWidth);
+	fields->saveField("PMOSLength", PMOSLength, DEFAULT.somePMOSLength);
+	fields->saveField("NMOSWidth", NMOSWidth, DEFAULT.someNMOSWidth);
+	fields->saveField("NMOSLength", NMOSLength, DEFAULT.someNMOSLength);
+	fields->saveField("electricalModel", electricalModel, DEFAULT.someElectricalModel);
 }
 
 void XNOR::setPMOSWidth(float PMOSWidth) {

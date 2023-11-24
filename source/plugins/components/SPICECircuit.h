@@ -97,7 +97,7 @@ private: /// attached DataElements (Agrregation)
 };
 
 class Resistor : public SPICECircuit {
-    public:
+public:
 	Resistor(Model* model, std::string name = ""): SPICECircuit(model, name) {
 		id = counter++;
 		build = [this]() {this->Build();};
@@ -109,7 +109,11 @@ class Resistor : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -121,7 +125,7 @@ class Resistor : public SPICECircuit {
 };
 
 class Vsource : public SPICECircuit {
-    public:
+public:
 	Vsource(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setVoltage(float voltage);
@@ -130,7 +134,11 @@ class Vsource : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -142,7 +150,7 @@ class Vsource : public SPICECircuit {
 };
 
 class Vpulse : public SPICECircuit {
-    public:
+public:
 	Vpulse(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setVoltage(float voltage);
@@ -153,7 +161,11 @@ class Vpulse : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -169,7 +181,7 @@ class Vpulse : public SPICECircuit {
 };
 
 class Vsine : public SPICECircuit {
-    public:
+public:
 	Vsine(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setVoltage(float voltage);
@@ -179,7 +191,11 @@ class Vsine : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -193,7 +209,7 @@ class Vsine : public SPICECircuit {
 };
 
 class Capacitor : public SPICECircuit {
-    public:
+public:
 	Capacitor(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void setCapacitance(float capacitance);
 	void Build();
@@ -202,7 +218,11 @@ class Capacitor : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -214,7 +234,7 @@ class Capacitor : public SPICECircuit {
 };
 
 class Diode : public SPICECircuit {
-    public:
+public:
 	Diode(Model* model, std::string name = ""): SPICECircuit(model, name) {
 		id = counter++; build = [this]() {this->Build();};
 	}
@@ -225,7 +245,11 @@ class Diode : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -237,7 +261,7 @@ class Diode : public SPICECircuit {
 };
 
 class PMOS: public SPICECircuit {
-    public:
+public:
 	PMOS(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setWidth(float width);
@@ -248,7 +272,11 @@ class PMOS: public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -264,7 +292,7 @@ class PMOS: public SPICECircuit {
 };
 
 class NMOS: public SPICECircuit {
-    public:
+public:
 	NMOS(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setWidth(float width);
@@ -275,7 +303,11 @@ class NMOS: public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -291,7 +323,7 @@ class NMOS: public SPICECircuit {
 };
 
 class NOT : public SPICECircuit {
-    public:
+public:
 	NOT(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setPMOSWidth(float PMOSWidth);
@@ -304,7 +336,11 @@ class NOT : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
 	const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -324,7 +360,7 @@ class NOT : public SPICECircuit {
 };
 
 class NAND : public SPICECircuit {
-    public:
+public:
 	NAND(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setPMOSWidth(float PMOSWidth);
@@ -337,7 +373,11 @@ class NAND : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
     const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -357,7 +397,7 @@ class NAND : public SPICECircuit {
 };
 
 class AND : public SPICECircuit {
-    public:
+public:
 	AND(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setPMOSWidth(float PMOSWidth);
@@ -370,7 +410,11 @@ class AND : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
     const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -390,7 +434,7 @@ class AND : public SPICECircuit {
 };
 
 class NOR : public SPICECircuit {
-    public:
+public:
 	NOR(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setPMOSWidth(float PMOSWidth);
@@ -403,7 +447,11 @@ class NOR : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
     const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -423,7 +471,7 @@ class NOR : public SPICECircuit {
 };
 
 class OR : public SPICECircuit {
-    public:
+public:
 	OR(Model* model, std::string name = ""): SPICECircuit(model, name)  { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setPMOSWidth(float PMOSWidth);
@@ -436,7 +484,11 @@ class OR : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
     const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -456,7 +508,7 @@ class OR : public SPICECircuit {
 };
 
 class XOR : public SPICECircuit {
-    public:
+public:
 	XOR(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setPMOSWidth(float PMOSWidth);
@@ -469,7 +521,11 @@ class XOR : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+
+private:
     const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
@@ -489,7 +545,7 @@ class XOR : public SPICECircuit {
 };
 
 class XNOR : public SPICECircuit {
-    public:
+public:
 	XNOR(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
 	void Build();
 	void setPMOSWidth(float PMOSWidth);
@@ -502,7 +558,11 @@ class XNOR : public SPICECircuit {
 	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
-    private:
+protected:
+	virtual bool _loadInstance(PersistenceRecord *fields);
+	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
+	
+private:
     const struct DEFAULT_VALUES {
 		const std::string someString = "Test";
 		const unsigned int someUint = 1;
