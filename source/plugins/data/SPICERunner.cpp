@@ -74,6 +74,8 @@ SPICERunner::~SPICERunner() {
 //
 
 std::string SPICERunner::CompileSpiceFile() {
+    for (auto callback : subscribers) callback();
+
     std::string spicefile = "GenESyS generated circuit\n\n";//set spicebehavior=all\n\n";
     // Resolves all model dependencies
 	for (std::string model: models) spicefile += ".include " + models_path + model + ".cir\n";
@@ -87,7 +89,8 @@ std::string SPICERunner::CompileSpiceFile() {
     return spicefile;
 }
 
-void SPICERunner::SendComponent(std::string *instance, std::string subcircuit, std::string model) {
+void SPICERunner::SendComponent(std::string *instance, std::function<void()> callback, std::string subcircuit, std::string model) {
+    subscribers.push_back(callback);
     // Recieves component data
     instances.push_back(instance);
     if (subcircuit.size()) subcircuits.insert(subcircuit);
@@ -95,42 +98,42 @@ void SPICERunner::SendComponent(std::string *instance, std::string subcircuit, s
 }
 
 void SPICERunner::PlotV(std::string net) {
-    vplots.push_back(net);
+	vplots.push_back("v("+net+") ");
 }
 
 template<typename... Args>
 void SPICERunner::PlotV(std::string net, Args... args) {
-    vplots.push_back(net);
+	vplots.push_back("v("+net+") ");
     PlotV(args...);
 }
 
 void SPICERunner::PlotVRelative(std::string comparison_base, std::string net) {
-    vplots.push_back(net + "-" + comparison_base);
+	vplots.push_back("v("+ net + ")-v(" + comparison_base + ") ");
 }
 
 template<typename... Args>
 void SPICERunner::PlotVRelative(std::string comparison_base, std::string net, Args... args) {
-    vplots.push_back(net + "-" + comparison_base);
+	vplots.push_back("v("+ net + ")-v(" + comparison_base + ") ");
     PlotVPlotVRelative(comparison_base, args...);
 }
 
 void SPICERunner::PlotI(std::string net) {
-    iplots.push_back(net);
+	iplots.push_back("i("+net+") ");
 }
 
 template<typename... Args>
 void SPICERunner::PlotI(std::string net, Args... args) {
-    iplots.push_back(net);
+	iplots.push_back("i("+net+") ");
     PlotV(args...);
 }
 
 void SPICERunner::PlotIRelative(std::string comparison_base, std::string net) {
-    vplots.push_back(net + "-" + comparison_base);
+	iplots.push_back("i("+ net + ")-i(" + comparison_base + ") ");
 }
 
 template<typename... Args>
 void SPICERunner::PlotIRelative(std::string comparison_base, std::string net, Args... args) {
-    vplots.push_back(net + "-" + comparison_base);
+	iplots.push_back("i("+ net + ")-i(" + comparison_base + ") ");
     PlotVPlotIRelative(comparison_base, args...);
 }
 
@@ -173,8 +176,8 @@ void SPICERunner::ParseOutput(){
     }
 }
 
-void SPICERunner::ConfigSim(double duration, double step, std::string plot) {
-    config = "\n.control\noption post = 2\n";
+void SPICERunner::ConfigSim(double duration, double step) {
+	config = "\n.control\n";
     // Simulation Duration
     config += "tran " + uc(step) + " " + uc(duration) + "\n";
 
@@ -182,18 +185,19 @@ void SPICERunner::ConfigSim(double duration, double step, std::string plot) {
     for (std::string measure: measures) config += measure;
     
     // Plots
-    std::vector<std::pair<std::vector<std::string>,std::string>> plots = {{iplots, "i"}, {vplots, "v"}};
-    for (int i = 0; i < plots.size(); ++i){
-        auto [plot_type, radical] = plots[i];
+	std::vector<std::vector<std::string>> plots = {iplots, vplots};
+	for (int i = 0; i < plots.size(); ++i){
+		std::vector<std::string> plot_type = plots[i];
         std::string plot_string = "hardcopy plot"+std::to_string(i)+".ps ";
-        for (std::string iplot: plot_type) plot_string += radical+"("+iplot+") ";
+		for (std::string plot: plot_type) plot_string += plot;
         plot_string += "\n";
         if (plot_type.size()) config += plot_string;
     }
     config+= "\n.endc\n";
 }
 
-void SPICERunner::Run(std::string output) {
+void SPICERunner::Run() {
+    std::string output = CompileSpiceFile();
     std::string s;
     std::ofstream out("input.cir");
     out << output;

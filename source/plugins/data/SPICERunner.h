@@ -21,6 +21,7 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <functional>
 
 #include "../../kernel/simulator/ModelDataDefinition.h"
 #include "../../kernel/simulator/PluginInformation.h"
@@ -42,9 +43,9 @@ public: /// constructors
 
 public: /// new public user methods for this component
 	std::string CompileSpiceFile();
-    void SendComponent(std::string *instance, std::string subcircuit = "", std::string model = "");
-    void ConfigSim(double duration, double step, std::string plot = "");
-    void Run(std::string output);
+	void SendComponent(std::string *instance, std::function<void()> callback, std::string subcircuit = "", std::string model = "");
+	void ConfigSim(double duration, double step);
+	void Run();
 	void PlotV(std::string net);
 	template<typename... Args> void PlotV(std::string net, Args... args);
 	void PlotVRelative(std::string comparison_base, std::string net);
@@ -92,8 +93,11 @@ private: /// Attributes that should be loaded or saved with this component (Pers
 	} DEFAULT;
 	std::string _someString = DEFAULT.someString;
 	unsigned int _someUint = DEFAULT.someUint;
+
 	std::set<std::string> subcircuits;
 	std::set<std::string> models;
+
+	std::vector<std::function<void()>> subscribers;
 	std::vector<std::string*> instances;
 
 	// Plot

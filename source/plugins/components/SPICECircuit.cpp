@@ -93,7 +93,7 @@ void SPICECircuit::init(std::string description, unsigned int id, std::vector<st
 		for (std::string pin: pins) *spice_instance += pin+" ";
 		*spice_instance += spice_name;
 		//Sends instance and subcircuit template to compiler
-		compiler->SendComponent(spice_instance, spice_template, model_file);
+		compiler->SendComponent(spice_instance, [this]() {this->UpdateConnections(); }, spice_template, model_file);
 
 	// Plain circuit declaration
 	} else {
@@ -106,7 +106,22 @@ void SPICECircuit::init(std::string description, unsigned int id, std::vector<st
 		if (model.size()) *spice_instance += model + " ";
 		for (std::string param: params) *spice_instance += param + " ";
 		// std::cout << "im sending this model to compile: " << model << "}" << std::endl;
-		compiler->SendComponent(spice_instance, "", model_file);
+		compiler->SendComponent(spice_instance, [this]() {this->UpdateConnections(); }, "", model_file);
+	}
+}
+
+void SPICECircuit::UpdateConnections() {
+	for (auto [pin, connection] : *getConnections()->connections()) {
+		pins[pin] = static_cast<SPICENode*>(connection->component)->getNodeName();
+        
+		if (!plain_circuit) *spice_instance = "x"+spice_name+std::to_string(id)+" ";
+		else *spice_instance = spice_name+std::to_string(id)+" ";
+		
+		for (std::string pin : pins) *spice_instance += pin+" ";
+		if (plain_circuit && model.size()) *spice_instance += model + " ";
+		
+		if (!plain_circuit) *spice_instance += spice_name;
+		else for (std::string param: params) *spice_instance += param + " ";
 	}
 }
 

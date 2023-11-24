@@ -12,6 +12,7 @@ R0 net_3 net_2 1.000000K
 
 .control
 tran 1.000000m  1.000000 
-hardcopy plot.ps v(net_3)-v(net_2)
+hardcopy plot1.ps v(net_3)-v(net_2) 
+
 .endc
 .end
