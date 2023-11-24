@@ -104,7 +104,7 @@ class Resistor : public SPICECircuit {
     }
 	void init(float resistance) {
 		id = counter++;
-		SPICECircuit::init(runner, "R a b", id, {uc(resistance)});
+		SPICECircuit::init("R a b", id, {uc(resistance)});
 	}
 	static PluginInformation* GetPluginInformation();
     private:
@@ -120,7 +120,7 @@ class Vsource : public SPICECircuit {
 	void init(double vcc) {
 		id = counter++;
 		std::string s = uc(vcc);
-		SPICECircuit::init(runner, "Vd a b", id, {s});
+		SPICECircuit::init("Vd a b", id, {s});
 	}
 	static PluginInformation* GetPluginInformation();
     private:
@@ -135,7 +135,7 @@ class Vpulse : public SPICECircuit {
 
 	void init(double vcc, double freq, double slope = 1e-11) {
 		id = counter++;
-		SPICECircuit::init(runner, "Vp a b", id, {"PULSE (0 "+uc(vcc)+uc(freq/2)+uc(slope)+uc(slope)+uc(freq/2)+uc(freq)+")"});
+		SPICECircuit::init("Vp a b", id, {"PULSE (0 "+uc(vcc)+uc(freq/2)+uc(slope)+uc(slope)+uc(freq/2)+uc(freq)+")"});
 	}
 	static PluginInformation* GetPluginInformation();
 
@@ -150,7 +150,7 @@ class Vsine : public SPICECircuit {
     }
 	void init(double vcc, double freq) {
 		id = counter++;
-		SPICECircuit::init(runner, "Vs a b", id, {"sin(0 "+uc(vcc)+uc(freq)+")"});
+		SPICECircuit::init("Vs a b", id, {"sin(0 "+uc(vcc)+uc(freq)+")"});
 	}
 	static PluginInformation* GetPluginInformation();
 
@@ -165,7 +165,7 @@ class Capacitor : public SPICECircuit {
     }
 	void init(float capacitance) {
 		id = counter++;
-		SPICECircuit::init(runner, "C a b", id, {uc(capacitance)});
+		SPICECircuit::init("C a b", id, {uc(capacitance)});
 	}
 	static PluginInformation* GetPluginInformation();
 
@@ -180,7 +180,7 @@ class Diode : public SPICECircuit {
     }
 	void init(std::string model = "diode") {
 		id = counter++;
-		SPICECircuit::init(runner, "D a b", id, {}, model, model);
+		SPICECircuit::init("D a b", id, {}, model, model);
 	}
 	static PluginInformation* GetPluginInformation();
 
@@ -195,7 +195,7 @@ class PMOS: public SPICECircuit {
     }
 	void init(double width = 140e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
 		id = counter++;
-		SPICECircuit::init(runner, "Mp source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "pmos"+model, model);
+		SPICECircuit::init("Mp source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "pmos"+model, model);
 	}
 	static PluginInformation* GetPluginInformation();
 
@@ -210,7 +210,7 @@ class NMOS: public SPICECircuit {
     }
 	void init(double width = 70e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
 		id = counter++;
-		SPICECircuit::init(runner, "Mn source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "nmos"+model, model);
+		SPICECircuit::init("Mn source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "nmos"+model, model);
 	}
 	static PluginInformation* GetPluginInformation();
 
@@ -225,7 +225,7 @@ class NOT : public SPICECircuit {
     }
 	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
-		SPICECircuit::init(runner,
+		SPICECircuit::init(
 			".subckt NOT vp a s\n"
 			 "Mp1 vp a s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
 			 "Mn1 s a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
@@ -245,7 +245,7 @@ class NAND : public SPICECircuit {
     }
 	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
-		SPICECircuit::init(runner,
+		SPICECircuit::init(
 			".subckt NAND vp vm a b s\n"
 			 "Mp1 vp a s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
 			 "Mp2 vp b s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
@@ -267,7 +267,7 @@ class AND : public SPICECircuit {
     }
 	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
-		SPICECircuit::init(runner,
+		SPICECircuit::init(
 			 ".subckt AND vp vm a b s\n"
 			 "Mp1 vp a ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
 			 "Mp2 vp b ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
@@ -291,7 +291,7 @@ class NOR : public SPICECircuit {
     }
 	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
-		SPICECircuit::init(runner,
+		SPICECircuit::init(
 			 ".subckt NOR vp vm a b s\n"
 			 "Mp1 vp a i1 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
 			 "Mp2 i1 b s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
@@ -314,7 +314,7 @@ class OR : public SPICECircuit {
 
 	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
-		SPICECircuit::init(runner,
+		SPICECircuit::init(
 			 ".subckt OR vp vm a b s\n"
 			 "Mp1 vp a i1 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
 			 "Mp2 i1 b ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
@@ -338,7 +338,7 @@ class XOR : public SPICECircuit {
     }
 	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
-		SPICECircuit::init(runner,
+		SPICECircuit::init(
 			 ".subckt XOR vp vm a b s\n"
 			 "Mp1 vp a na vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
 			 "Mn1 na a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
@@ -370,7 +370,7 @@ class XNOR : public SPICECircuit {
     }
 	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
 		id = counter++;
-		SPICECircuit::init(runner,
+		SPICECircuit::init(
 			 ".subckt XNOR vp vm a b s\n"
 			 "Mp1 vp a na vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
 			 "Mn1 na a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
