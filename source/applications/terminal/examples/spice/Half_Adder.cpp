@@ -48,25 +48,26 @@ int Half_Adder::main(int argc, char** argv) {
 
 	Vsource* v1 = plugins->newInstance<Vsource>(model);
 	v1->setRunner(runner);
-	v1->init(voltage);
+	v1->setVoltage(voltage);
 	v1->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
 	v1->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	Vpulse* va = plugins->newInstance<Vpulse>(model);
 	va->setRunner(runner);
-	va->init(voltage, sim_time);
+	va->setVoltage(voltage);
+	va->setFreq(sim_time);
 	va->getConnections()->insertAtPort(0, new Connection({a, 0}));
 	va->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	Vpulse* vb = plugins->newInstance<Vpulse>(model);
 	vb->setRunner(runner);
-	vb->init(voltage, sim_time/2);
+	vb->setVoltage(voltage);
+	vb->setFreq(sim_time/2);
 	vb->getConnections()->insertAtPort(0, new Connection({b, 0}));
 	vb->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 
 	XNOR* xnor = plugins->newInstance<XNOR>(model);
 	xnor->setRunner(runner);
-	xnor->init();
 	xnor->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
 	xnor->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 	xnor->getConnections()->insertAtPort(2, new Connection({a, 0}));
@@ -75,7 +76,6 @@ int Half_Adder::main(int argc, char** argv) {
 
 	NAND* nand = plugins->newInstance<NAND>(model);
 	nand->setRunner(runner);
-	nand->init();
 	nand->getConnections()->insertAtPort(0, new Connection({vdd, 0}));
 	nand->getConnections()->insertAtPort(1, new Connection({gnd, 0}));
 	nand->getConnections()->insertAtPort(2, new Connection({a,0}));
