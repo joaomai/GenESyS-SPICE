@@ -26,7 +26,6 @@ public: /// constructors
 	virtual ~SPICECircuit() = default;
 
 public: /// new public user methods for this components
-    void insertAtRank(int pin, SPICENode* node);
 	void setRunner(SPICERunner* runner);
 	SPICERunner* getRunner();
 
@@ -39,8 +38,9 @@ public: /// static public methods that must have implementations (Load and New j
 	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
 protected: /// virtual protected method that must be overriden
-	void init(std::string description, unsigned int id, std::vector<std::string> the_params = {""}, std::string the_model = "", std::string the_model_file = "");
+	void BuildCircuit(std::string description, unsigned int id, std::vector<std::string> the_params = {""}, std::string the_model = "", std::string the_model_file = "");
 	void UpdateConnections();
+	virtual void Build() { id = counter++; build = [this]() {this->Build();};}
 	virtual bool _loadInstance(PersistenceRecord *fields);
 	virtual void _saveInstance(PersistenceRecord *fields, bool saveDefaultValues);
 	virtual void _onDispatchEvent(Entity* entity, unsigned int inputPortNumber); ///< This method is only for ModelComponents, not ModelDataElements
@@ -75,11 +75,10 @@ private: /// new private user methods
     SPICERunner *compiler;
 
 	static unsigned int counter;
-    bool plain_circuit; 
-
+	bool plain_circuit;
 protected:
     unsigned int id;
-       
+	std::function<void()> build;
 
 private: /// Attributes that should be loaded or saved with this component (Persistent Fields)
 
@@ -100,303 +99,426 @@ private: /// attached DataElements (Agrregation)
 class Resistor : public SPICECircuit {
     public:
 	Resistor(Model* model, std::string name = ""): SPICECircuit(model, name) {
-
-    }
-	void init(float resistance) {
 		id = counter++;
-		SPICECircuit::init("R a b", id, {uc(resistance)});
+		build = [this]() {this->Build();};
 	}
+	void Build();
+	void setResistance(float resistance);
+
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
+
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float someResistance = 1000;
+	} DEFAULT;
+
     static unsigned int counter;
-	float resistance;
+	float resistance = DEFAULT.someResistance;
 };
 
 class Vsource : public SPICECircuit {
     public:
-	Vsource(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	Vsource(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setVoltage(float voltage);
 
-    }
-	void init(double vcc) {
-		id = counter++;
-		std::string s = uc(vcc);
-		SPICECircuit::init("Vd a b", id, {s});
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
+
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float someVoltage = 5;
+	} DEFAULT;
+
+	float voltage = DEFAULT.someVoltage;
     static unsigned int counter;
 };
 
 class Vpulse : public SPICECircuit {
     public:
-	Vpulse(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	Vpulse(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setVoltage(float voltage);
+	void setFreq(float freq);
+	void setSlope(float slope);
 
-	}
-
-	void init(double vcc, double freq, double slope = 1e-11) {
-		id = counter++;
-		SPICECircuit::init("Vp a b", id, {"PULSE (0 "+uc(vcc)+uc(freq/2)+uc(slope)+uc(slope)+uc(freq/2)+uc(freq)+")"});
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float someVoltage = 5;
+		const float someFreq = 60;
+		const float someSlope = 1e-11;
+	} DEFAULT;
+
     static unsigned int counter;
+	float voltage = DEFAULT.someVoltage;
+	float freq = DEFAULT.someFreq;
+	float slope = DEFAULT.someSlope;
 };
 
 class Vsine : public SPICECircuit {
     public:
-	Vsine(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	Vsine(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setVoltage(float voltage);
+	void setFreq(float freq);
 
-    }
-	void init(double vcc, double freq) {
-		id = counter++;
-		SPICECircuit::init("Vs a b", id, {"sin(0 "+uc(vcc)+uc(freq)+")"});
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float someVoltage = 5;
+		const float someFreq = 60;
+	} DEFAULT;
+
     static unsigned int counter;
+	float voltage = DEFAULT.someVoltage;
+	float freq = DEFAULT.someFreq;
 };
 
 class Capacitor : public SPICECircuit {
     public:
-	Capacitor(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	Capacitor(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void setCapacitance(float capacitance);
+	void Build();
 
-    }
-	void init(float capacitance) {
-		id = counter++;
-		SPICECircuit::init("C a b", id, {uc(capacitance)});
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float someCapacitance = 0.01;
+	} DEFAULT;
+
     static unsigned int counter;
+	float capacitance = DEFAULT.someCapacitance;
 };
 
 class Diode : public SPICECircuit {
     public:
 	Diode(Model* model, std::string name = ""): SPICECircuit(model, name) {
-
-    }
-	void init(std::string model = "diode") {
-		id = counter++;
-		SPICECircuit::init("D a b", id, {}, model, model);
+		id = counter++; build = [this]() {this->Build();};
 	}
+	void Build();
+	void setElectricalModel(std::string electricalModel);
+
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
-    static unsigned int counter;
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const std::string someElectricalModel = "diode";
+	} DEFAULT;
+
+	static unsigned int counter;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class PMOS: public SPICECircuit {
     public:
-	PMOS(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	PMOS(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setWidth(float width);
+	void setLength(float length);
+	void setElectricalModel(std::string electricalModel);
 
-    }
-	void init(double width = 140e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
-		id = counter++;
-		SPICECircuit::init("Mp source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "pmos"+model, model);
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float someWidth = 140e-9;
+		const float someLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float width = DEFAULT.someWidth;
+	float length = DEFAULT.someLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class NMOS: public SPICECircuit {
     public:
-	NMOS(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	NMOS(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setWidth(float width);
+	void setLength(float length);
+	void setElectricalModel(std::string electricalModel);
 
-    }
-	void init(double width = 70e-9, double lenght = 32e-9, std::string model = "32nmCMOS") {
-		id = counter++;
-		SPICECircuit::init("Mn source gate drain bulk", id, {"w="+uc(width),"l="+uc(lenght)}, "nmos"+model, model);
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float someWidth = 70e-9;
+		const float someLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float width = DEFAULT.someWidth;
+	float length = DEFAULT.someLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class NOT : public SPICECircuit {
     public:
-	NOT(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	NOT(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setPMOSWidth(float PMOSWidth);
+	void setPMOSLength(float length);
+	void setNMOSWidth(float NMOSWidth);
+	void setNMOSLength(float NMOSLength);
+	void setElectricalModel(std::string electricalModel);
 
-    }
-	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
-		id = counter++;
-		SPICECircuit::init(
-			".subckt NOT vp a s\n"
-			 "Mp1 vp a s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn1 s a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 ".ends\n",
-			 id, {}, model, model);
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+	const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float somePMOSWidth = 140e-9;
+		const float somePMOSLength = 32e-9;
+		const float someNMOSWidth = 70e-9;
+		const float someNMOSLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float PMOSWidth = DEFAULT.somePMOSWidth;
+	float PMOSLength = DEFAULT.somePMOSLength;
+	float NMOSWidth = DEFAULT.someNMOSWidth;
+	float NMOSLength = DEFAULT.someNMOSLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class NAND : public SPICECircuit {
     public:
-	NAND(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	NAND(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setPMOSWidth(float PMOSWidth);
+	void setPMOSLength(float length);
+	void setNMOSWidth(float NMOSWidth);
+	void setNMOSLength(float NMOSLength);
+	void setElectricalModel(std::string electricalModel);
 
-    }
-	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
-		id = counter++;
-		SPICECircuit::init(
-			".subckt NAND vp vm a b s\n"
-			 "Mp1 vp a s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp2 vp b s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn1 s a i1 vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn2 i1 b vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 ".ends\n",
-			 id, {}, model, model);
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+    const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float somePMOSWidth = 140e-9;
+		const float somePMOSLength = 32e-9;
+		const float someNMOSWidth = 70e-9;
+		const float someNMOSLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float PMOSWidth = DEFAULT.somePMOSWidth;
+	float PMOSLength = DEFAULT.somePMOSLength;
+	float NMOSWidth = DEFAULT.someNMOSWidth;
+	float NMOSLength = DEFAULT.someNMOSLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class AND : public SPICECircuit {
     public:
-	AND(Model* model, std::string name = ""): SPICECircuit(model, name) {
-
-    }
-	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
-		id = counter++;
-		SPICECircuit::init(
-			 ".subckt AND vp vm a b s\n"
-			 "Mp1 vp a ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp2 vp b ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn1 ns a i1 vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn2 i1 b vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mp3 vp ns s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn3 s ns vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 ".ends\n",
-			 id, {}, model, model);
-	}
+	AND(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setPMOSWidth(float PMOSWidth);
+	void setPMOSLength(float length);
+	void setNMOSWidth(float NMOSWidth);
+	void setNMOSLength(float NMOSLength);
+	void setElectricalModel(std::string electricalModel);
+	
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+    const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float somePMOSWidth = 140e-9;
+		const float somePMOSLength = 32e-9;
+		const float someNMOSWidth = 70e-9;
+		const float someNMOSLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float PMOSWidth = DEFAULT.somePMOSWidth;
+	float PMOSLength = DEFAULT.somePMOSLength;
+	float NMOSWidth = DEFAULT.someNMOSWidth;
+	float NMOSLength = DEFAULT.someNMOSLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class NOR : public SPICECircuit {
     public:
-	NOR(Model* model, std::string name = ""): SPICECircuit(model, name) {
-
-    }
-	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
-		id = counter++;
-		SPICECircuit::init(
-			 ".subckt NOR vp vm a b s\n"
-			 "Mp1 vp a i1 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp2 i1 b s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn1 s a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn2 s b vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 ".ends\n",
-			 id, {}, model, model);
-	}
+	NOR(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setPMOSWidth(float PMOSWidth);
+	void setPMOSLength(float length);
+	void setNMOSWidth(float NMOSWidth);
+	void setNMOSLength(float NMOSLength);
+	void setElectricalModel(std::string electricalModel);
+	
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+    const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float somePMOSWidth = 140e-9;
+		const float somePMOSLength = 32e-9;
+		const float someNMOSWidth = 70e-9;
+		const float someNMOSLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float PMOSWidth = DEFAULT.somePMOSWidth;
+	float PMOSLength = DEFAULT.somePMOSLength;
+	float NMOSWidth = DEFAULT.someNMOSWidth;
+	float NMOSLength = DEFAULT.someNMOSLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class OR : public SPICECircuit {
     public:
-	OR(Model* model, std::string name = ""): SPICECircuit(model, name)  {
+	OR(Model* model, std::string name = ""): SPICECircuit(model, name)  { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setPMOSWidth(float PMOSWidth);
+	void setPMOSLength(float length);
+	void setNMOSWidth(float NMOSWidth);
+	void setNMOSLength(float NMOSLength);
+	void setElectricalModel(std::string electricalModel);
 
-    }
-
-	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
-		id = counter++;
-		SPICECircuit::init(
-			 ".subckt OR vp vm a b s\n"
-			 "Mp1 vp a i1 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp2 i1 b ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn1 ns a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn2 ns b vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mp3 vp ns s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn3 s ns vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 ".ends\n",
-			 id, {}, model, model);
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+    const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float somePMOSWidth = 140e-9;
+		const float somePMOSLength = 32e-9;
+		const float someNMOSWidth = 70e-9;
+		const float someNMOSLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float PMOSWidth = DEFAULT.somePMOSWidth;
+	float PMOSLength = DEFAULT.somePMOSLength;
+	float NMOSWidth = DEFAULT.someNMOSWidth;
+	float NMOSLength = DEFAULT.someNMOSLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class XOR : public SPICECircuit {
     public:
-	XOR(Model* model, std::string name = ""): SPICECircuit(model, name) {
-
-    }
-	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
-		id = counter++;
-		SPICECircuit::init(
-			 ".subckt XOR vp vm a b s\n"
-			 "Mp1 vp a na vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn1 na a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-
-			 "Mp2 vp b nb vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn2 nb b vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-
-			 "Mp3 vp na i1 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp4 i1 b s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp5 vp a i2 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp6 i2 nb s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn3 s nb i3 vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn4 i3 na vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn5 s b i4 vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn6 i4 a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 ".ends\n",
-			 id, {}, model, model);
-	}
+	XOR(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setPMOSWidth(float PMOSWidth);
+	void setPMOSLength(float length);
+	void setNMOSWidth(float NMOSWidth);
+	void setNMOSLength(float NMOSLength);
+	void setElectricalModel(std::string electricalModel);
+	
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+    const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float somePMOSWidth = 140e-9;
+		const float somePMOSLength = 32e-9;
+		const float someNMOSWidth = 70e-9;
+		const float someNMOSLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float PMOSWidth = DEFAULT.somePMOSWidth;
+	float PMOSLength = DEFAULT.somePMOSLength;
+	float NMOSWidth = DEFAULT.someNMOSWidth;
+	float NMOSLength = DEFAULT.someNMOSLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 class XNOR : public SPICECircuit {
     public:
-	XNOR(Model* model, std::string name = ""): SPICECircuit(model, name) {
+	XNOR(Model* model, std::string name = ""): SPICECircuit(model, name) { id = counter++; build = [this]() {this->Build();};}
+	void Build();
+	void setPMOSWidth(float PMOSWidth);
+	void setPMOSLength(float length);
+	void setNMOSWidth(float NMOSWidth);
+	void setNMOSLength(float NMOSLength);
+	void setElectricalModel(std::string electricalModel);
 
-    }
-	void init(std::string model = "32nmCMOS", double PMOSwidth = 140e-9, double PMOSlenght = 32e-9, double NMOSwidth = 70e-9, double NMOSlenght = 32e-9) {
-		id = counter++;
-		SPICECircuit::init(
-			 ".subckt XNOR vp vm a b s\n"
-			 "Mp1 vp a na vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn1 na a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-
-			 "Mp2 vp b nb vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn2 nb b vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-
-			 "Mp3 vp na i1 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp4 i1 b ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp5 vp a i2 vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mp6 i2 nb ns vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn3 ns nb i3 vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn4 i3 na vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn5 ns b i4 vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-			 "Mn6 i4 a vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-
-			 "Mp7 vp ns s vp PMOS"+model+" w="+uc(PMOSwidth)+" l="+uc(PMOSlenght)+"\n"
-			 "Mn7 s ns vm vm NMOS"+model+" w="+uc(NMOSwidth)+" l="+uc(NMOSlenght)+"\n"
-
-			 ".ends\n",
-			 id, {}, model, model);
-	}
 	static PluginInformation* GetPluginInformation();
+	static ModelComponent* LoadInstance(Model* model, PersistenceRecord *fields);
+	static ModelDataDefinition* NewInstance(Model* model, std::string name = "");
 
     private:
+    const struct DEFAULT_VALUES {
+		const std::string someString = "Test";
+		const unsigned int someUint = 1;
+		const float somePMOSWidth = 140e-9;
+		const float somePMOSLength = 32e-9;
+		const float someNMOSWidth = 70e-9;
+		const float someNMOSLength = 32e-9;
+		const std::string someElectricalModel = "32nmCMOS";
+	} DEFAULT;
+
     static unsigned int counter;
+	float PMOSWidth = DEFAULT.somePMOSWidth;
+	float PMOSLength = DEFAULT.somePMOSLength;
+	float NMOSWidth = DEFAULT.someNMOSWidth;
+	float NMOSLength = DEFAULT.someNMOSLength;
+	std::string electricalModel = DEFAULT.someElectricalModel;
 };
 
 

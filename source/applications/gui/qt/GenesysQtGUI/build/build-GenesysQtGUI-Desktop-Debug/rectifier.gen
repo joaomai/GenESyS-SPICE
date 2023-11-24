@@ -1,0 +1,7 @@
+# Genesys Simulation Model
+# Simulator, Model and Simulation infos
+0   Simulator  "GenESyS - GENeric and Expansible SYstem Simulator" versionNumber=230914 0   ModelInfo  "Model 1" version="1.0" projectTitle="" description="" analystName="" 0   ModelSimulation "" traceLevel=9 
+# Model Data Definitions
+79  SPICERunner "SPICERunner_1" 
+# Model Components
+80  SPICENode  "gnd" nexts=0 81  SPICENode  "SPICENode_1" nexts=0 82  SPICENode  "SPICENode_2" nexts=0 83  SPICENode  "SPICENode_3" nexts=0 84  SPICECircuit "SPICECircuit_1" nextId[0]=81 nextId[1]=80 nexts=2 85  SPICECircuit "SPICECircuit_2" nextId[0]=82 nextId[1]=81 nexts=2 86  SPICECircuit "SPICECircuit_3" nextId[0]=82 nextId[1]=80 nexts=2 87  SPICECircuit "SPICECircuit_4" nextId[0]=81 nextId[1]=83 nexts=2 88  SPICECircuit "SPICECircuit_5" nextId[0]=80 nextId[1]=82 nexts=2 89  SPICECircuit "SPICECircuit_6" nextId[0]=83 nextId[1]=82 nexts=2 90  SPICECircuit "SPICECircuit_7" nextId[0]=83 nextId[1]=82 nexts=2 
