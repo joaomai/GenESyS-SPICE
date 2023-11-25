@@ -101,43 +101,31 @@ void SPICERunner::SendComponent(std::string *instance, std::string subcircuit, s
 }
 
 void SPICERunner::PlotV(std::string net) {
-	vplots.push_back("v("+net+") ");
+	plots += "hardcopy plot"+std::to_string(pcount++)+".ps v("+net+")\n";
 }
 
 template<typename... Args>
 void SPICERunner::PlotV(std::string net, Args... args) {
-	vplots.push_back("v("+net+") ");
+	plots += "hardcopy plot"+std::to_string(pcount++)+".ps v("+net+")\n";
     PlotV(args...);
 }
 
 void SPICERunner::PlotVRelative(std::string comparison_base, std::string net) {
-	vplots.push_back("v("+ net + ")-v(" + comparison_base + ") ");
+	if (comparison_base == "gnd"){
+        PlotV(net);
+        return;
+    }
+    plots += "hardcopy plot"+std::to_string(pcount++)+".ps v("+ net + ")-v(" + comparison_base + ")\n";
 }
 
 template<typename... Args>
 void SPICERunner::PlotVRelative(std::string comparison_base, std::string net, Args... args) {
-	vplots.push_back("v("+ net + ")-v(" + comparison_base + ") ");
+    if (comparison_base == "gnd"){
+        PlotV(net, args...);
+        return;
+    }
+	plots += "hardcopy plot"+std::to_string(pcount++)+".ps v("+ net + ")-v(" + comparison_base + ")\n";
     PlotVPlotVRelative(comparison_base, args...);
-}
-
-void SPICERunner::PlotI(std::string net) {
-	iplots.push_back("i("+net+") ");
-}
-
-template<typename... Args>
-void SPICERunner::PlotI(std::string net, Args... args) {
-	iplots.push_back("i("+net+") ");
-    PlotV(args...);
-}
-
-void SPICERunner::PlotIRelative(std::string comparison_base, std::string net) {
-	iplots.push_back("i("+ net + ")-i(" + comparison_base + ") ");
-}
-
-template<typename... Args>
-void SPICERunner::PlotIRelative(std::string comparison_base, std::string net, Args... args) {
-	iplots.push_back("i("+ net + ")-i(" + comparison_base + ") ");
-    PlotVPlotIRelative(comparison_base, args...);
 }
 
 double* SPICERunner::MeasurePeak(std::string label, std::string peak, std::string quantity, std::string node, float start, float finish) {
@@ -190,15 +178,8 @@ void SPICERunner::ConfigSim(double duration, double step) {
     for (std::string measure: measures) config += measure;
     
     // Plots
-	std::vector<std::vector<std::string>> plots = {iplots, vplots};
-	for (int i = 0; i < plots.size(); ++i){
-		std::vector<std::string> plot_type = plots[i];
-        std::string plot_string = "hardcopy plot"+std::to_string(i)+".ps ";
-		for (std::string plot: plot_type) plot_string += plot;
-        plot_string += "\n";
-        if (plot_type.size()) config += plot_string;
-    }
-    config+= "\n.endc\n";
+    config += plots;
+    config += "\n.endc\n";
 }
 
 void SPICERunner::Run() {
