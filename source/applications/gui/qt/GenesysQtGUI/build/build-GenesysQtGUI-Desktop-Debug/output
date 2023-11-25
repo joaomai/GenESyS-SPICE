@@ -18,4 +18,7 @@ net_3                             -2.97221e-21
 vs1#branch                        -5.44076e-33
 
 maxout              =  1.199993e+01 at=  1.874911e-01
-com_hardcopy: graph not defined
+
+The file "plot0.ps" may be printed on a postscript printer.
+
+The file "plot1.ps" may be printed on a postscript printer.

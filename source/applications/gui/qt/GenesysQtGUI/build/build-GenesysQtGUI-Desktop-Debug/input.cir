@@ -13,9 +13,8 @@ R1 net_3 net_2 1.000000K
 .control
 tran 1.000000m  1.000000 
 meas tran maxout max v(net_1) from=0.000000a  to=1.000000 
-hardcopy plot1.ps v(net_1) 
-hardcopy plot2.ps v(net_3)-v(net_2)
-
+hardcopy plot0.ps v(net_3)-v(net_2)
+hardcopy plot1.ps v(net_1)
 
 .endc
 .end

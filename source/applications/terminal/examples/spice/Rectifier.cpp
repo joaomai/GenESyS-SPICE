@@ -86,7 +86,7 @@ int Rectifier::main(int argc, char** argv) {
 	double* v = runner->MeasurePeak("maxout", "max", "v", vdd->getNodeName(), 0, 1);
 
 	runner->PlotVRelative(vm->getNodeName(), vp->getNodeName());
-	runner->PlotVRelative(vdd->getNodeName(), gnd->getNodeName());
+	runner->PlotVRelative(gnd->getNodeName(), vdd->getNodeName());
 	runner->ConfigSim(sim_time, sim_step);
 	runner->Run();
 

@@ -83,7 +83,7 @@ int Half_Adder::main(int argc, char** argv) {
 	nand->getConnections()->insertAtPort(4, new Connection({carry, 0}));
 
 	runner->PlotVRelative(vdd->getNodeName(), gnd->getNodeName());
-	runner->PlotIRelative(vdd->getNodeName(), gnd->getNodeName());
+	runner->PlotVRelative(vdd->getNodeName(), gnd->getNodeName());
 	runner->ConfigSim(sim_time, sim_step);
 	runner->Run();	runner->Run();
 
